@@ -25,7 +25,12 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" OR
     endif()
 endif()
 
-include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
+include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS} include)
+set (IKextended_HEADERS include/OpenSim/Simulation/OrientationSensor.h
+                        include/OpenSim/Simulation/osimExtendedIKDLL.h)
 
-add_executable(offlineOrientationSensorsIK offlineOrientationSensorsIK.cpp)
+set (IKextended_SOURCES src/OrientationSensor.cpp)
+
+add_executable(offlineOrientationSensorsIK offlineOrientationSensorsIK.cpp ${IKextended_HEADERS} ${IKextended_SOURCES})
 target_link_libraries(offlineOrientationSensorsIK ${OPENSIMSIMBODY_LIBRARIES})
+target_compile_definitions(offlineOrientationSensorsIK PRIVATE OSIMEXTENDEDIK_EXPORTS)
