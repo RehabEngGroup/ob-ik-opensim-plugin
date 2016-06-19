@@ -1,8 +1,7 @@
-
 //=============================================================================
 // INCLUDES
 //=============================================================================
-#include "OpenSim/Simulation/OrientationSensor.h"
+#include "OpenSim/Simulation/Model/OrientationSensor.h"
 #include <OpenSim/Simulation/Model/Model.h>
 #include <OpenSim/Simulation/Model/BodySet.h>
 
@@ -13,7 +12,8 @@ using namespace std;
 using namespace OpenSim;
 using SimTK::Vec3;
 
-Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03);
+// TODO: Fix visualization functions and variables
+//Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03);
 //=============================================================================
 // CONSTRUCTOR(S) AND DESTRUCTOR
 //=============================================================================
@@ -22,11 +22,11 @@ Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03)
 * Default constructor.
 */
 OrientationSensor::OrientationSensor() :
-Object()
+ModelComponent()
 {
     setNull();
     constructProperties();
-    _displayer.setOwner(this);
+ //   _displayer.setOwner(this);
 }
 
 //_____________________________________________________________________________
@@ -37,40 +37,44 @@ OrientationSensor::~OrientationSensor()
 {
 }
 
+void OrientationSensor::registerTypes()
+{
+}
+
 //_____________________________________________________________________________
 /**
 * Copy constructor.
 *
-* @param aMarker Marker to be copied.
+* @param aOSensor oSensor to be copied.
 */
-OrientationSensor::OrientationSensor(const OrientationSensor &aMarker) :
-Object(aMarker)
-{
-    setNull();
-    constructProperties();
-    copyData(aMarker);
-    _displayer.setOwner(this);
-}
+//OrientationSensor::OrientationSensor(const OrientationSensor &aOSensor) :
+//ModelComponent(aOSensor)
+//{
+//    setNull();
+//    constructProperties();
+//    copyData(aOSensor);
+//    _displayer.setOwner(this);
+//}
 
 //=============================================================================
 // CONSTRUCTION METHODS
 //=============================================================================
 //_____________________________________________________________________________
 /**
-* Copy data members from one Marker to another.
+* Copy data members from one oSensor to another.
 *
-* @param aMarker Marker to be copied.
+* @param aOSensor oSensor to be copied.
 */
-void OrientationSensor::copyData(const OrientationSensor &aMarker)
-{
-    _body = NULL;
-    _displayer = aMarker._displayer;
-    _virtual = aMarker._virtual;
-}
+//void OrientationSensor::copyData(const OrientationSensor &aOSensor)
+//{
+//    _body = NULL;
+//    _displayer = aOSensor._displayer;
+//    _virtual = aOSensor._virtual;
+//}
 
 //_____________________________________________________________________________
 /**
-* Set the data members of this Marker to their null values.
+* Set the data members of this oSensor to their null values.
 */
 void OrientationSensor::setNull()
 {
@@ -85,9 +89,9 @@ void OrientationSensor::setNull()
 void OrientationSensor::constructProperties()
 {
     constructProperty_body("");
-    constructProperty_offset(SimTK::Vec3());
+    constructProperty_position_offset(SimTK::Vec3(0));
     constructProperty_fixed(false);
-    constructProperty_rotation(SimTK::Vec3());
+    constructProperty_rotation_offset(SimTK::Vec3(0));
 
 }
 
@@ -110,49 +114,32 @@ void OrientationSensor::connectOSensorToModel(const Model& aModel)
             _body = &const_cast<Model*>(&aModel)->updBodySet().get(get_body());
         }
         catch (const Exception&) {
-            string errorMessage = "Error: Body " + get_body() + " referenced in marker " + getName() +
+            string errorMessage = "Error: Body " + get_body() + " referenced in oSensor " + getName() +
                 " does not exist in model " + aModel.getName();
             throw Exception(errorMessage);
         }
-        // If marker jumped between bodies we need to fix display stuff
-        if (oldBody && oldBody->getName() != _body->getName()){
-            oldBody->updDisplayer()->removeDependent(&_displayer);
-        }
-        // Todo_AYMAN: make code below safe to call multiple times (since this
-        // method may be called multiple times for a marker). Should also try
-        // to handle case where a marker is deleted (e.g. in
-        // SimbodyEngine::updateMarkerSet) because then may end up with
-        // stale pointers.
-        VisibleObject* ownerBodyDisplayer;
-        if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
-            if (!ownerBodyDisplayer->hasDependent(&_displayer)){	// Only if first time to be encountered 
-                ownerBodyDisplayer->addDependent(&_displayer);
-            }
-        }
-        _displayer.setOwner(this);
-        updateGeometry();
-
     }
     else
     {
-        string errorMessage = "Error: No body name specified for marker " + getName() + " in model " +
+        string errorMessage = "Error: No body name specified for oSensor " + getName() + " in model " +
             aModel.getName();
         throw Exception(errorMessage);
     }
 }
+
 //_____________________________________________________________________________
 /**
 * Remove self from the list of displayable objects and free resources
 */
-void OrientationSensor::removeSelfFromDisplay()
-{
-    VisibleObject* ownerBodyDisplayer;
-    if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
-        if (ownerBodyDisplayer->hasDependent(&_displayer)){
-            ownerBodyDisplayer->removeDependent(&_displayer);
-        }
-    }
-}
+//void OrientationSensor::removeSelfFromDisplay()
+//{
+//    VisibleObject* ownerBodyDisplayer;
+//    if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
+//        if (ownerBodyDisplayer->hasDependent(&_displayer)){
+//            ownerBodyDisplayer->removeDependent(&_displayer);
+//        }
+//    }
+//}
 //=============================================================================
 // OPERATORS
 //=============================================================================
@@ -162,15 +149,15 @@ void OrientationSensor::removeSelfFromDisplay()
 *
 * @return Reference to this object.
 */
-OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker)
-{
-    // BASE CLASS
-    Object::operator=(aMarker);
-
-    copyData(aMarker);
-
-    return(*this);
-}
+//OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker)
+//{
+//    // BASE CLASS
+//    Object::operator=(aMarker);
+//
+//    copyData(aMarker);
+//
+//    return(*this);
+//}
 
 //=============================================================================
 // UTILITY
@@ -185,15 +172,15 @@ OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker
 */
 void OrientationSensor::updateFromOSensor(const OrientationSensor &aOSensor)
 {
-    if (!aOSensor.getProperty_offset().getValueIsDefault() )
+    if (!aOSensor.getProperty_position_offset().getValueIsDefault() )
     {
-        const Vec3& off = aOSensor.get_offset();
-        set_offset(off);
+        const Vec3& off = aOSensor.get_position_offset();
+        set_position_offset(off);
     }
-    if (!aOSensor.getProperty_rotation().getValueIsDefault())
+    if (!aOSensor.getProperty_rotation_offset().getValueIsDefault())
     {
-        const Vec3& off = aOSensor.get_rotation();
-        set_rotation(off);
+        const Vec3& off = aOSensor.get_rotation_offset();
+        set_rotation_offset(off);
     }
 
     if (!aOSensor.getProperty_fixed().getValueIsDefault())
@@ -244,9 +231,10 @@ void OrientationSensor::changeBodyPreserveLocation(const SimTK::State& s, OpenSi
     // Preserve location means to switch bodies without changing
     // the location of the marker in the inertial reference frame.
     SimTK::Vec3 newOffset;
-    aBody.getModel().getSimbodyEngine().transformPosition(s, *_body, get_offset(), aBody, newOffset);
-    set_offset(newOffset);
+    aBody.getModel().getSimbodyEngine().transformPosition(s, *_body, get_position_offset(), aBody, newOffset);
+    set_position_offset(newOffset);
     //TODO handle rotation
+    //aBody.getModel().getSimbodyEngine().get
     set_body(aBody.getName());
     connectOSensorToModel(aBody.getModel());
 }
@@ -260,25 +248,51 @@ void OrientationSensor::changeBodyPreserveLocation(const SimTK::State& s, OpenSi
 *
 * @param aScaleFactors XYZ scale factors.
 */
+// TODO: Check if make sense the scaling
 void OrientationSensor::scale(const SimTK::Vec3& aScaleFactors)
 {
-    SimTK::Vec3 off = get_offset();
+    SimTK::Vec3 off = get_position_offset();
     for (int i = 0; i < 3; i++)
         off[i] *= aScaleFactors[i];
-    set_offset(off);
+    set_position_offset(off);
+}
+
+void OrientationSensor::setPositionOffset(const SimTK::Vec3& offset)
+{
+    set_position_offset(offset);
+  //  updateGeometry();
+}
+
+void OrientationSensor::setRotationOffset(const SimTK::Vec3& offset)
+{
+    set_rotation_offset(offset);
+   // updateGeometry();
+}
+
+void OrientationSensor::setBodyName(const std::string aBodyName)
+{
+    set_body(aBodyName);
+}
+
+SimTK::Vec3 OrientationSensor::getPositionOffset(){
+    return get_position_offset();
+}
+
+SimTK::Vec3 OrientationSensor::getRotationOffset(){
+    return get_rotation_offset();
 }
 
 //_____________________________________________________________________________
 /**
 * Update the geometry to correspond to position changes
 */
-void OrientationSensor::updateGeometry()
-{
-    Transform position;
-    position.setP(get_offset());
-    SimTK::Rotation rot;
-    rot.setRotationToBodyFixedXYZ(get_rotation());
-    position.updR() = SimTK::Rotation(rot);
-    updDisplayer()->setTransform(position);
-
-}
+//void OrientationSensor::updateGeometry()
+//{
+//    Transform position;
+//    position.setP(get_position_offset());
+//    SimTK::Rotation rot;
+//    rot.setRotationToBodyFixedXYZ(get_rotation_offset());
+//    position.updR() = SimTK::Rotation(rot);
+//    updDisplayer()->setTransform(position);
+//
+//}
