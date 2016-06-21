@@ -126,8 +126,9 @@ void OrientationSensorData::readStoFile(const string& aFileName)
 
     for (iter = sensorIndices.begin(); iter != sensorIndices.end(); iter++) {
         SimTK::String sensorNameWithSuffix = iter->second;
+        SimTK::String originalName = sensorNameWithSuffix;
         size_t dotIndex = sensorNameWithSuffix.toLower().find_last_of(".w");
-        SimTK::String candidateOSensorName = sensorNameWithSuffix.substr(0, dotIndex - 1);
+        SimTK::String candidateOSensorName = originalName.substr(0, dotIndex - 1);
         _orientationSensorNames.append(candidateOSensorName);
     }
     // use map to populate data for OrientationSensorData header
