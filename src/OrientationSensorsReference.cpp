@@ -26,7 +26,7 @@
 
 using namespace std;
 using namespace SimTK;
-SimTK::Vec3;
+using SimTK::Vec3;
 namespace OpenSim {
 
 //______________________________________________________________________________
