@@ -52,6 +52,10 @@ add_library(IKextended ${IKextended_HEADERS} ${IKextended_SOURCES})
 target_link_libraries(IKextended ${OPENSIMSIMBODY_LIBRARIES})
 target_compile_definitions(IKextended PRIVATE OSIMEXTENDEDIK_EXPORTS)
 
+install (TARGETS IKextended DESTINATION lib)
+install (FILES ${IKextended_HEADERS}        
+         DESTINATION include)
+
 add_executable(oSensorsIK testOSensorsIK.cpp )
 target_link_libraries(oSensorsIK ${OPENSIMSIMBODY_LIBRARIES} IKextended)
 #target_compile_definitions(oSensorsIK PRIVATE OSIMEXTENDEDIK_EXPORTS)
