@@ -5,6 +5,7 @@
 #include "OpenSim/Simulation/Model/OrientationSensorSet.h"
 #include "OpenSim/Simulation/Model/Model.h"
 #include "OpenSim/Simulation/Model/ComponentSet.h"
+#include <OpenSim/Simulation/Model/ModelVisualizer.h>
 
 int main(int argc, char* argv[]) {
 
@@ -39,7 +40,7 @@ int main(int argc, char* argv[]) {
   OpenSim::InverseKinematicsExtendedTool ik(argv[2]);
 
   ik.setModel(model);
-
+  model.setUseVisualizer(true);
   // start timing
   std::clock_t startTime = std::clock();
 

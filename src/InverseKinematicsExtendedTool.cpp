@@ -31,6 +31,7 @@
 #include <OpenSim/Simulation/MarkersReference.h>
 #include <OpenSim/Simulation/CoordinateReference.h>
 #include <OpenSim/Simulation/InverseKinematicsExtendedSolver.h>
+#include <OpenSim/Simulation/Model/ModelVisualizer.h>
 
 #include <OpenSim/Common/IO.h>
 #include <OpenSim/Common/Storage.h>
@@ -413,6 +414,12 @@ bool InverseKinematicsExtendedTool::run()
         for (int i = 0; i < Nframes; i++) {
             s.updTime() = start_time + i*dt;
             ikExtendedSolver.track(s);
+            if (_model->hasVisualizer()) {
+              auto& viz = _model->updVisualizer().updSimbodyVisualizer();
+              viz.setBackgroundType(viz.GroundAndSky);
+              viz.setShowSimTime(true);
+              viz.report(s);
+            }
             std::cout << "Tracking at " << i << std::endl;
             if(_reportErrors){
                 Array<double> markerErrors(0.0, 3);
