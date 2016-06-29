@@ -55,7 +55,6 @@ private:
     int _numOrientationSensors;
     int _firstFrameNumber;
     double _dataRate;
-    double _cameraRate; // TODO check if these info are useless and can be removed
     double _originalDataRate;
     int _originalStartFrame;
     int _originalNumFrames;
@@ -87,7 +86,6 @@ public:
     double getStartFrameTime() const;
     double getLastFrameTime() const;
     double getDataRate() const { return _dataRate; }
-    double getCameraRate() const { return _cameraRate; } // TODO check if these info are useless and can be removed
 
 private:
 //    void readMOTFile(const std::string& aFileName, OrientationSensorData& aSMD);
