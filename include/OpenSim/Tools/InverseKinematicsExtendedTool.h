@@ -152,6 +152,9 @@ private:
     void setNull();
     void setupProperties();
 
+    bool hasMarkerFile_ = false;
+    bool hasOSensorFile_ = false;
+
     //--------------------------------------------------------------------------
     // OPERATORS
     //--------------------------------------------------------------------------

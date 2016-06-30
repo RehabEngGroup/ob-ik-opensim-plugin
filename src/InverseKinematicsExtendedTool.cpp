@@ -276,7 +276,7 @@ bool InverseKinematicsExtendedTool::run()
         else
             modelFromFile = false;
 
-        _model->printBasicInfo(cout);
+        _model->printBasicInfo(std::cout);
 
         // Do the maneuver to change then restore working directory
         // so that the parsing code behaves properly if called from a different directory.
@@ -315,6 +315,11 @@ bool InverseKinematicsExtendedTool::run()
             // haveCoordinateFile = true;
             coordFunctions = new GCVSplineSet(5,&coordinateValues);
         }
+
+        if (_markerFileName != "" && _markerFileName != "Unassigned")
+          hasMarkerFile_ = true;
+        if (_oSensorFileName != "" && _oSensorFileName != "Unassigned")
+          hasOSensorFile_ = true;
 
         // Loop through old "IKTaskSet" and assign weights to the coordinate and marker references
         // For coordinates, create the functions for coordinate reference values
@@ -363,41 +368,50 @@ bool InverseKinematicsExtendedTool::run()
             }
         }
 
-        //Set the weights for markers
-        markersReference.setMarkerWeightSet(markerWeights);
-        oSensorsReference.setOrientationSensorWeightSet(oSensorWeights);
-        //Load the makers
-        markersReference.loadMarkersFile(_markerFileName);
-        oSensorsReference.loadOrientationSensorsFile(_oSensorFileName);
+        double start_time = _timeRange[0];
+        double final_time = _timeRange[1];
+        double dt = SimTK::Infinity;
 
-        // Determine the start time, if the provided time range is not specified then use time from marker reference
-        // also adjust the time range for the tool if the provided range exceeds that of the marker data
-        SimTK::Vec2 markersValidTimRange = markersReference.getValidTimeRange();
-        double start_time = (markersValidTimRange[0] > _timeRange[0]) ? markersValidTimRange[0] : _timeRange[0];
-        double final_time = (markersValidTimRange[1] < _timeRange[1]) ? markersValidTimRange[1] : _timeRange[1];
+        if (hasMarkerFile_) {
+          markersReference.setMarkerWeightSet(markerWeights);
+          markersReference.loadMarkersFile(_markerFileName);
+          SimTK::Vec2 markersValidTimRange = markersReference.getValidTimeRange();
+          start_time = (markersValidTimRange[0] > start_time) ? markersValidTimRange[0] : start_time;
+          final_time = (markersValidTimRange[1] < final_time) ? markersValidTimRange[1] : final_time;
+          dt = (dt > 1.0 / markersReference.getSamplingFrequency()) ? 1.0 / markersReference.getSamplingFrequency() : dt;
+        }
+        if (hasOSensorFile_) {
+          oSensorsReference.setOrientationSensorWeightSet(oSensorWeights);
+          oSensorsReference.loadOrientationSensorsFile(_oSensorFileName);
+          SimTK::Vec2 oSensorsValidTimRange = oSensorsReference.getValidTimeRange();
+          start_time = (oSensorsValidTimRange[0] > start_time) ? oSensorsValidTimRange[0] : start_time;
+          final_time = (oSensorsValidTimRange[1] < final_time) ? oSensorsValidTimRange[1] : final_time;
+          dt = (dt > 1.0 / oSensorsReference.getSamplingFrequency()) ? 1.0 / oSensorsReference.getSamplingFrequency() : dt;
+        }
+        InverseKinematicsExtendedSolver * ikSolver;
+        if (hasMarkerFile_ && hasOSensorFile_)
+          ikSolver = new InverseKinematicsExtendedSolver(*_model, markersReference, oSensorsReference, coordinateReferences, _constraintWeight);
+        else if (hasMarkerFile_ && !hasOSensorFile_)
+          ikSolver = new InverseKinematicsExtendedSolver(*_model, markersReference,coordinateReferences, _constraintWeight);
+        else if (!hasMarkerFile_ && hasOSensorFile_)
+          ikSolver = new InverseKinematicsExtendedSolver(*_model, oSensorsReference, coordinateReferences, _constraintWeight);
+        else
+          return 0;
 
-        SimTK::Vec2 oSensorsValidTimRange = oSensorsReference.getValidTimeRange();
-        start_time = (oSensorsValidTimRange[0] > start_time) ? oSensorsValidTimRange[0] : start_time;
-        final_time = (oSensorsValidTimRange[1] < final_time) ? oSensorsValidTimRange[1] : final_time;
+        ikSolver->setAccuracy(_accuracy);
+        ikSolver->setSerializeAllDefaults(true);
+        std::cout << ikSolver->dump(true) << std::endl;
 
-        // create the solver given the input data
-        InverseKinematicsExtendedSolver ikExtendedSolver(*_model, markersReference, oSensorsReference, coordinateReferences, _constraintWeight);
-        ikExtendedSolver.setAccuracy(_accuracy);
-        ikExtendedSolver.setSerializeAllDefaults(true);
-        std::cout << ikExtendedSolver.dump(true) << std::endl;
         s.updTime() = start_time;
-        ikExtendedSolver.assemble(s);
-        ikExtendedSolver.setSerializeAllDefaults(true);
-        std::cout << ikExtendedSolver.dump(true) << std::endl;
-        std::cout << "Model assembled" << std::endl;
+        int Nframes = int((final_time - start_time) / dt) + 1;
+
+        ikSolver->assemble(s);
         kinematicsReporter.begin(s);
 
         const clock_t start = clock();
-        double dt = (markersReference.getSamplingFrequency() > oSensorsReference.getSamplingFrequency()) ? 1.0 / markersReference.getSamplingFrequency() : 1.0/ oSensorsReference.getSamplingFrequency();
-
-        int Nframes = int((final_time-start_time)/dt)+1;
         AnalysisSet& analysisSet = _model->updAnalysisSet();
         analysisSet.begin(s);
+
         // number of markers
         int nm = markerWeights.getSize();
         int nos = oSensorWeights.getSize();
@@ -413,7 +427,7 @@ bool InverseKinematicsExtendedTool::run()
 
         for (int i = 0; i < Nframes; i++) {
             s.updTime() = start_time + i*dt;
-            ikExtendedSolver.track(s);
+            ikSolver->track(s);
             if (_model->hasVisualizer()) {
               auto& viz = _model->updVisualizer().updSimbodyVisualizer();
               viz.setBackgroundType(viz.GroundAndSky);
@@ -421,66 +435,66 @@ bool InverseKinematicsExtendedTool::run()
               viz.report(s);
             }
             std::cout << "Tracking at " << i << std::endl;
-            if(_reportErrors){
+            if (_reportErrors) {
+              std::cout << "Frame " << i << " (t=" << s.getTime() << "):\t";
+
+              if (nm > 0) {
                 Array<double> markerErrors(0.0, 3);
-                Array<double> sensorErrors(0.0, 3);
                 double totalSquaredMarkerError = 0.0;
-                double totalOSensorError = 0.0;
                 double maxSquaredMarkerError = 0.0;
-                double maxOSensorError = 0.0;
-                int worst = -1;
-                int worstOSensor = -1;
-
-                ikExtendedSolver.computeCurrentSquaredMarkerErrors(squaredMarkerErrors);
-                ikExtendedSolver.computeCurrentOSensorErrors(oSensorErrors);
-                for(int j=0; j<nm; ++j){
-                    totalSquaredMarkerError += squaredMarkerErrors[j];
-                    if(squaredMarkerErrors[j] > maxSquaredMarkerError){
-                        maxSquaredMarkerError = squaredMarkerErrors[j];
-                        worst = j;
-                    }
+                int worstMarker = -1;
+                ikSolver->computeCurrentSquaredMarkerErrors(squaredMarkerErrors);
+                for (int j = 0; j < nm; ++j) {
+                  totalSquaredMarkerError += squaredMarkerErrors[j];
+                  if (squaredMarkerErrors[j] > maxSquaredMarkerError) {
+                    maxSquaredMarkerError = squaredMarkerErrors[j];
+                    worstMarker = j;
+                  }
                 }
-
-                for (int j = 0; j<nos; ++j){
-                    totalOSensorError += oSensorErrors[j];
-                    if (oSensorErrors[j] > maxOSensorError){
-                        maxOSensorError = oSensorErrors[j];
-                        worstOSensor = j;
-                    }
-                }
-
                 double rms = sqrt(totalSquaredMarkerError / nm);
                 markerErrors.set(0, totalSquaredMarkerError);
                 markerErrors.set(1, rms);
                 markerErrors.set(2, sqrt(maxSquaredMarkerError));
+                modelMarkerErrors->append(s.getTime(), 3, &markerErrors[0]);
+                std::cout << "total squared marker error = " << totalSquaredMarkerError;
+                std::cout << ", marker error: RMS=" << rms;
+                std::cout << ", max=" << sqrt(maxSquaredMarkerError) << " (" << ikSolver->getMarkerNameForIndex(worstMarker) << ")" << std::endl;
+
+                if (_reportMarkerLocations) {
+                  ikSolver->computeCurrentMarkerLocations(markerLocations);
+                  Array<double> locations(0.0, 3 * nm);
+                  for (int j = 0; j < nm; ++j) {
+                    for (int k = 0; k < 3; ++k)
+                      locations.set(3 * j + k, markerLocations[j][k]);
+                  }
+                  modelMarkerLocations->append(s.getTime(), 3 * nm, &locations[0]);
+                }
+              }
+
+              if(nos>0) {
+                Array<double> sensorErrors(0.0, 3);
+                double totalOSensorError = 0.0;
+                double maxOSensorError = 0.0;
+                int worstOSensor = -1;
+                ikSolver->computeCurrentOSensorErrors(oSensorErrors);
+
+                for (int j = 0; j < nos; ++j) {
+                  totalOSensorError += oSensorErrors[j];
+                  if (oSensorErrors[j] > maxOSensorError) {
+                    maxOSensorError = oSensorErrors[j];
+                    worstOSensor = j;
+                  }
+                }
                 sensorErrors.set(0, totalOSensorError);
                 sensorErrors.set(1, 0);  // TODO : should be the rms error, not 0
                 sensorErrors.set(2, maxOSensorError);
-                modelMarkerErrors->append(s.getTime(), 3, &markerErrors[0]);
-              //  modelOSensorErrors->append(s.getTime(), 3, &sensorErrors[0]);
-
-                cout << "Frame " << i << " (t=" << s.getTime() << "):\t";
-                cout << "total squared marker error = " << totalSquaredMarkerError;
-                cout << ", marker error: RMS=" << rms;
-                //cout << ", max=" << sqrt(maxSquaredMarkerError) << " (" << ikExtendedSolver.getMarkerNameForIndex(worst) << ")" << endl;
-                cout << "total orientation sensor error = " << totalOSensorError;
+                //  modelOSensorErrors->append(s.getTime(), 3, &sensorErrors[0]);
+                std::cout << "total orientation sensor error = " << totalOSensorError;
                 //cout << ", marker error: RMS=" << rms;
-                cout << ", max=" << maxOSensorError << " (" << ikExtendedSolver.getOSensorNameForIndex(worstOSensor) << ")" << endl;
+                std::cout << ", max=" << maxOSensorError << " (" << ikSolver->getOSensorNameForIndex(worstOSensor) << ")" << std::endl;
+
+              }
             }
-
-            if(_reportMarkerLocations){
-                ikExtendedSolver.computeCurrentMarkerLocations(markerLocations);
-                Array<double> locations(0.0, 3*nm);
-                for(int j=0; j<nm; ++j){
-                    for(int k=0; k<3; ++k)
-                        locations.set(3*j+k, markerLocations[j][k]);
-                }
-
-                modelMarkerLocations->append(s.getTime(), 3*nm, &locations[0]);
-
-            }
-            // TODO: add reporting orientation sensor locations and orientations
-
             kinematicsReporter.step(s, i);
             analysisSet.step(s, i);
         }
@@ -491,7 +505,7 @@ bool InverseKinematicsExtendedTool::run()
             kinematicsReporter.getPositionStorage()->print(_outputMotionFileName);
         }
 
-        if (modelMarkerErrors) {
+        if (nm>0 && modelMarkerErrors) {
             Array<string> labels("", 4);
             labels[0] = "time";
             labels[1] = "total_squared_error";
@@ -508,7 +522,7 @@ bool InverseKinematicsExtendedTool::run()
             delete modelMarkerErrors;
         }
 
-        if(modelMarkerLocations){
+        if(nm >0 && modelMarkerLocations){
             Array<string> labels("", 3*nm+1);
             labels[0] = "time";
             Array<string> XYZ("", 3*nm);
@@ -516,7 +530,7 @@ bool InverseKinematicsExtendedTool::run()
 
             for(int j=0; j<nm; ++j){
                 for(int k=0; k<3; ++k)
-                    labels.set(3*j+k+1, ikExtendedSolver.getMarkerNameForIndex(j)+XYZ[k]);
+                    labels.set(3*j+k+1, ikSolver->getMarkerNameForIndex(j)+XYZ[k]);
             }
             modelMarkerLocations->setColumnLabels(labels);
             modelMarkerLocations->setName("Model Marker Locations from IK");
@@ -529,10 +543,8 @@ bool InverseKinematicsExtendedTool::run()
         }
 
         IO::chDir(saveWorkingDirectory);
-
         success = true;
-
-        cout << "InverseKinematicsTool completed " << Nframes-1 << " frames in " <<(double)(clock()-start)/CLOCKS_PER_SEC << "s\n" <<endl;
+        std::cout << "InverseKinematicsTool completed " << Nframes-1 << " frames in " <<(double)(clock()-start)/CLOCKS_PER_SEC << "s\n" << std::endl;
     }
     catch (const std::exception& ex) {
         std::cout << "InverseKinematicsTool Failed: " << ex.what() << std::endl;
@@ -552,7 +564,7 @@ void InverseKinematicsExtendedTool::updateFromXMLNode(SimTK::Xml::Element& aNode
         if (versionNumber < 20300){
             std::string origFilename = getDocumentFileName();
             newFileName=IO::replaceSubstring(newFileName, ".xml", "_v23.xml");
-            cout << "Old version setup file encountered. Converting to new file "<< newFileName << endl;
+            std::cout << "Old version setup file encountered. Converting to new file "<< newFileName << std::endl;
             SimTK::Xml::Document doc = SimTK::Xml::Document(origFilename);
             doc.writeToFile(newFileName);
         }

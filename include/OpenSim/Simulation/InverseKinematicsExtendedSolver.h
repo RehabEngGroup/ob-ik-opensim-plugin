@@ -93,7 +93,18 @@ public:
     //--------------------------------------------------------------------------
     virtual ~InverseKinematicsExtendedSolver() {}
 
-    InverseKinematicsExtendedSolver(const Model &model, MarkersReference &markersReference,
+    InverseKinematicsExtendedSolver(const Model &model,
+                            MarkersReference &markersReference,
+                            SimTK::Array_<CoordinateReference> &coordinateReferences,
+                            double constraintWeight = SimTK::Infinity);
+
+    InverseKinematicsExtendedSolver(const Model &model,
+                            OrientationSensorsReference &oSensorsReference,
+                            SimTK::Array_<CoordinateReference> &coordinateReferences,
+                            double constraintWeight = SimTK::Infinity);
+
+    InverseKinematicsExtendedSolver(const Model &model,
+                            MarkersReference &markersReference,
                             OrientationSensorsReference &oSensorsReference,
                             SimTK::Array_<CoordinateReference> &coordinateReferences,
                             double constraintWeight = SimTK::Infinity);
@@ -187,6 +198,11 @@ private:
     // Non-accessible cache of the marker values to be matched at a given state
     SimTK::Array_<SimTK::Vec3> _markerValues;
     SimTK::Array_<SimTK::Quaternion> _orientationSensorValues;
+    bool hasMarkersFile_ = false;
+    bool hasOSensorsFile_ = false;
+
+    void setupMarkerGoals(SimTK::State &s);
+    void setupOSensorGoals(SimTK::State &s);
 
 //=============================================================================
 };  // END of class InverseKinematicsExtendedSolver
