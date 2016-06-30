@@ -28,16 +28,34 @@ endif()
 set(BUILD_SHARED_LIBS "TRUE" CACHE BOOL "Build shared libraries." FORCE)
 
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS} include)
-set (IKextended_HEADERS include/OpenSim/Simulation/Model/OrientationSensor.h
-                        include/OpenSim/Simulation/Model/OrientationSensorSet.h
-                        include/OpenSim/Common/OrientationSensorFrame.h
-                        include/OpenSim/Common/OrientationSensorData.h
+
+set (IKextended_OpenSim_Simulation_Model_HEADERS 
+                        include/OpenSim/Simulation/Model/OrientationSensor.h
+                        include/OpenSim/Simulation/Model/OrientationSensorSet.h)
+
+
+set (IKextended_OpenSim_Simulation_HEADERS 
                         include/OpenSim/Simulation/OrientationSensorsReference.h
                         include/OpenSim/Simulation/InverseKinematicsExtendedSolver.h
                         include/OpenSim/Simulation/osimExtendedIKDLL.h
+)
+                        
+set (IKextended_OpenSim_Common_HEADERS 
+                        include/OpenSim/Common/OrientationSensorFrame.h
+                        include/OpenSim/Common/OrientationSensorData.h)
+
+
+set (IKextended_OpenSim_Tools_HEADERS 
                         include/OpenSim/Tools/IKExtendedTaskSet.h
                         include/OpenSim/Tools/IKOrientationSensorTask.h
                         include/OpenSim/Tools/InverseKinematicsExtendedTool.h)
+
+
+
+set (IKextended_HEADERS ${IKextended_OpenSim_Simulation_HEADERS}
+                        ${IKextended_OpenSim_Common_HEADERS}
+                        ${IKextended_OpenSim_Tools_HEADERS}
+                        )
 
 set (IKextended_SOURCES src/OrientationSensor.cpp
                         src/OrientationSensorSet.cpp
@@ -53,8 +71,14 @@ target_link_libraries(IKextended ${OPENSIMSIMBODY_LIBRARIES})
 target_compile_definitions(IKextended PRIVATE OSIMEXTENDEDIK_EXPORTS)
 
 install (TARGETS IKextended DESTINATION lib)
-install (FILES ${IKextended_HEADERS}        
-         DESTINATION include)
+install (FILES ${IKextended_OpenSim_Common_HEADERS}        
+         DESTINATION include/OpenSim/Common)
+install (FILES ${IKextended_OpenSim_Simulation_HEADERS}        
+         DESTINATION include/OpenSim/Simulation)
+install (FILES ${IKextended_OpenSim_Simulation_Model_HEADERS}        
+         DESTINATION include/OpenSim/Simulation/Model)
+install (FILES ${IKextended_OpenSim_Tools_HEADERS}        
+         DESTINATION include/OpenSim/Tools)
 
 add_executable(oSensorsIK testOSensorsIK.cpp )
 target_link_libraries(oSensorsIK ${OPENSIMSIMBODY_LIBRARIES} IKextended)
