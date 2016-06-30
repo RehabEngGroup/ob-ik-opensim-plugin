@@ -47,7 +47,7 @@ namespace OpenSim {
     SimTK::Array_<CoordinateReference> &coordinateReferences,
     double constraintWeight) : AssemblySolver(model, coordinateReferences, constraintWeight),
     _markersReference(markersReference),
-    _orientationSensorsReference(OpenSim::OrientationSensorsReference())
+    _orientationSensorsReference(osrr_)
   {
     setAuthors("Luca Tagliapietra, Elena Ceseracciu");
 
@@ -91,7 +91,7 @@ namespace OpenSim {
     OrientationSensorsReference &orientationSensorsReference,
     SimTK::Array_<CoordinateReference> &coordinateReferences,
     double constraintWeight) : AssemblySolver(model, coordinateReferences, constraintWeight),
-    _markersReference(OpenSim::MarkersReference()),
+    _markersReference(mrr_),
     _orientationSensorsReference(orientationSensorsReference)
   {
     setAuthors("Luca Tagliapietra, Elena Ceseracciu");

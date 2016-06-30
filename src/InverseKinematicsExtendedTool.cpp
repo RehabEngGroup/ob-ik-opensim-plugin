@@ -392,7 +392,7 @@ bool InverseKinematicsExtendedTool::run()
         if (hasMarkerFile_ && hasOSensorFile_)
           ikSolver = new InverseKinematicsExtendedSolver(*_model, markersReference, oSensorsReference, coordinateReferences, _constraintWeight);
         else if (hasMarkerFile_ && !hasOSensorFile_)
-          ikSolver = new InverseKinematicsExtendedSolver(*_model, markersReference,coordinateReferences, _constraintWeight);
+          ikSolver = new InverseKinematicsExtendedSolver(*_model, markersReference, coordinateReferences, _constraintWeight);
         else if (!hasMarkerFile_ && hasOSensorFile_)
           ikSolver = new InverseKinematicsExtendedSolver(*_model, oSensorsReference, coordinateReferences, _constraintWeight);
         else

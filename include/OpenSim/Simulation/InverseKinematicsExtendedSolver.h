@@ -201,6 +201,12 @@ private:
     bool hasMarkersFile_ = false;
     bool hasOSensorsFile_ = false;
 
+    OpenSim::MarkersReference* mrp_ = nullptr;
+    OpenSim::MarkersReference& mrr_ = *mrp_;
+
+    OpenSim::OrientationSensorsReference* osrp_ = nullptr;
+    OpenSim::OrientationSensorsReference& osrr_ = *osrp_;
+
     void setupMarkerGoals(SimTK::State &s);
     void setupOSensorGoals(SimTK::State &s);
 
