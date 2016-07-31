@@ -153,10 +153,9 @@ set(OPENSIMSIMBODY_INCLUDE_DIR_DOC
     "The locations of OpenSim and Simbody headers.")
 find_path(OPENSIM_INCLUDE_DIR
     NAMES "OpenSim/OpenSim.h"
-    PATHS ${OPENSIM_SEARCH_PATHS}
+    HINTS ${OPENSIM_SEARCH_PATHS}
     PATH_SUFFIXES "sdk/include" "opensim/sdk/include" "OpenSim/sdk/include"
     DOC ${OPENSIM_INCLUDE_DIR_DOC}
-    NO_SYSTEM_ENVIRONMENT_PATH
     )
 # This change is necessary for Simbody 3.4 and beyond, and is incompatible
 # with Simbody 3.3 and below.
