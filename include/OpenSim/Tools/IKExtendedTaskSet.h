@@ -26,6 +26,7 @@
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
 #include <OpenSim/Common/Set.h>
 #include "OpenSim/Tools/IKTask.h"
+#include "OpenSim/Tools/IKTaskSet.h"
 #include "OpenSim/Tools/IKMarkerTask.h"
 #include "OpenSim/Tools/IKOrientationSensorTask.h"
 #include <OpenSim/Simulation/MarkersReference.h>
@@ -41,22 +42,14 @@ namespace OpenSim {
  * - Added constructor from a file for use in GUI. -Ayman 02/20/07
  */
 
-class OSIMEXTENDEDIK_API IKExtendedTaskSet : public Set<IKTask> {
-OpenSim_DECLARE_CONCRETE_OBJECT(IKExtendedTaskSet, Set<IKTask>);
+class OSIMEXTENDEDIK_API IKExtendedTaskSet : public OpenSim::IKTaskSet {
+OpenSim_DECLARE_CONCRETE_OBJECT(IKExtendedTaskSet, IKTaskSet);
 
 public:
     IKExtendedTaskSet() {}
-    IKExtendedTaskSet(const IKExtendedTaskSet &aIKExtendedTaskSet) : Set<IKTask>(aIKExtendedTaskSet) { }
-    IKExtendedTaskSet(const std::string &aFileName) : Set<IKTask>(aFileName) { }
-    void createMarkerWeightSet(Set<MarkerWeight>& aWeights){
-        for(int i=0; i< getSize(); i++){
-            if(IKMarkerTask *nextTask = dynamic_cast<IKMarkerTask *>(&get(i))){
-                if(nextTask->getApply()){
-                    aWeights.cloneAndAppend(*(new MarkerWeight(nextTask->getName(), nextTask->getWeight())));
-                }
-            }
-        }
-    };
+    IKExtendedTaskSet(const IKExtendedTaskSet &aIKExtendedTaskSet) : IKTaskSet(aIKExtendedTaskSet) { }
+    IKExtendedTaskSet(const std::string &aFileName) : IKTaskSet(aFileName) { }
+
     void createOrientationSensorsWeightSet(Set<OrientationSensorWeight>& aWeights){
         for (int i = 0; i < getSize(); i++){
             if (IKOrientationSensorTask *nextTask = dynamic_cast<IKOrientationSensorTask *>(&get(i))){
@@ -67,7 +60,7 @@ public:
         }
     };
 #ifndef SWIG
-    IKExtendedTaskSet& operator=(const IKExtendedTaskSet &aIKExtendedTaskSet) { Set<IKTask>::operator=(aIKExtendedTaskSet); return *this; }
+    IKExtendedTaskSet& operator=(const IKExtendedTaskSet &aIKExtendedTaskSet) { IKTaskSet::operator=(aIKExtendedTaskSet); return *this; }
 #endif
 //=============================================================================
 };  // END of class IKExtendedTaskSet
