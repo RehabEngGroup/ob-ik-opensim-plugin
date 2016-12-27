@@ -55,6 +55,8 @@ OrientationSensorsReference::OrientationSensorsReference(const std::string senso
  */
 OrientationSensorsReference::OrientationSensorsReference(OrientationSensorData& aSensorData, const Set<OrientationSensorWeight>* aSensorWeightSet) : Reference_<SimTK::Quaternion>()
 {
+    setAuthors("Luca Tagliapietra, Elena Ceseracciu");
+    constructProperties();
     if (aSensorWeightSet!=nullptr)
         setOrientationSensorWeightSet(*aSensorWeightSet);
     populateFromOrientationSensorData(aSensorData);
