@@ -55,7 +55,9 @@ set (IKExtended_OpenSim_Common_HEADERS
 set (IKExtended_OpenSim_Tools_HEADERS
                         include/OpenSim/Tools/IKExtendedTaskSet.h
                         include/OpenSim/Tools/IKOrientationSensorTask.h
-                        include/OpenSim/Tools/InverseKinematicsExtendedTool.h)
+                        include/OpenSim/Tools/InverseKinematicsExtendedTool.h
+                        include/OpenSim/Tools/ScaleExtendedTool.h
+                        include/OpenSim/Tools/OrientationSensorPlacer.h)
 
 set (IKExtended_HEADERS ${IKExtended_OpenSim_Simulation_HEADERS}
                         ${IKExtended_OpenSim_Simulation_Model_HEADERS}
@@ -70,7 +72,9 @@ set (IKExtended_SOURCES src/OrientationSensor.cpp
                         src/InverseKinematicsExtendedSolver.cpp
                         src/IKOrientationSensorTask.cpp
                         src/InverseKinematicsExtendedTool.cpp
-                        src/RegisterTypes_osimExtendedIK.cpp)
+                        src/RegisterTypes_osimExtendedIK.cpp
+                        src/OrientationSensorPlacer.cpp
+                        src/ScaleExtendedTool.cpp)
 
 add_library(IKExtended ${IKExtended_HEADERS} ${IKExtended_SOURCES})
 target_link_libraries(IKExtended ${OPENSIMSIMBODY_LIBRARIES})
@@ -96,6 +100,9 @@ target_link_libraries(oSensorsIK IKExtended ${OPENSIMSIMBODY_LIBRARIES})
 
 add_executable(testModelIO testModelIO.cpp)
 target_link_libraries(testModelIO IKExtended ${OPENSIMSIMBODY_LIBRARIES})
+
+add_executable(oSensorPlacer testOSensorPlacer.cpp)
+target_link_libraries(oSensorPlacer IKExtended ${OPENSIMSIMBODY_LIBRARIES})
 
 # Create IKExtentedConfig.cmake etc.
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/IKExtended)

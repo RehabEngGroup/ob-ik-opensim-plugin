@@ -1,11 +1,5 @@
 #include <OpenSim/OpenSim.h>
 #include "OpenSim/Tools/InverseKinematicsExtendedTool.h"
-#include "OpenSim/Tools/IKExtendedTaskSet.h"
-#include "OpenSim/Simulation/Model/OrientationSensor.h"
-#include "OpenSim/Simulation/Model/OrientationSensorSet.h"
-#include "OpenSim/Simulation/Model/Model.h"
-#include "OpenSim/Simulation/Model/ComponentSet.h"
-#include <OpenSim/Simulation/Model/ModelVisualizer.h>
 
 int main(int argc, char* argv[]) {
 

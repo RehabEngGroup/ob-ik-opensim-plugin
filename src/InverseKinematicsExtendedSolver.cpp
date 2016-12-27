@@ -519,7 +519,6 @@ namespace OpenSim {
       // Check if we have this marker in the model, else ignore it
       index = modelOSensorSet.getIndex(oSensorNames[i], index);
       wIndex = owSet.getIndex(oSensorNames[i], wIndex);
-      std::cout << "index " << index << " windex " << wIndex << std::endl;
       if ((index >= 0) && (wIndex >= 0)) {
         OrientationSensor &oSensor = modelOSensorSet[index];
         const SimTK::MobilizedBody& mobod =

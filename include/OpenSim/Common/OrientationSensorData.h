@@ -75,7 +75,7 @@ public:
     virtual ~OrientationSensorData();
 
     void findFrameRange(double aStartTime, double aEndTime, int& rStartFrame, int& rEndFrame) const;
-    //void averageFrames(double aThreshold = -1.0, double aStartTime = -SimTK::Infinity, double aEndTime = SimTK::Infinity);
+    void averageFrames(double aThreshold = -1.0, double aStartTime = -SimTK::Infinity, double aEndTime = SimTK::Infinity);
     const std::string& getFileName() const { return _fileName; }
     const OrientationSensorFrame& getFrame(int aIndex) const;
     int getOrientationSensorIndex(const std::string& aName) const;

@@ -27,8 +27,8 @@ ModelComponent()
     setNull();
     constructProperties();
     _displayer.setOwner(this);
-    _displayer.addGeometry(_defaultGeometry);
-    _displayer.setShowAxes(true);
+   // _displayer.addGeometry(_defaultGeometry);
+   // _displayer.setShowAxes(true);
 }
 
 //_____________________________________________________________________________

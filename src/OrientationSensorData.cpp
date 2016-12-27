@@ -258,7 +258,6 @@ double OrientationSensorData::getLastFrameTime() const
     return(_frames[_numFrames-1]->getFrameTime());
 }
 
-// TODO: find a smart way to average a set of quaternions
 //_____________________________________________________________________________
 /**
  * Average all the frames between aStartTime and
@@ -274,131 +273,55 @@ double OrientationSensorData::getLastFrameTime() const
  * @param aStartTime start time of frame range to average.
  * @param aEndTime end time of frame range to average.
  */
-//void OrientationSensorData::averageFrames(double aThreshold, double aStartTime, double aEndTime) // TODO: check the implementation
-//{
-//    if (_numFrames < 2)
-//        return;
-//
-//    int startIndex = 0, endIndex = 1;
-//    double *minW = NULL, *minX = NULL, *minY = NULL, *minZ = NULL, *maxW = NULL, *maxX = NULL, *maxY = NULL, *maxZ = NULL;
-//
-//    findFrameRange(aStartTime, aEndTime, startIndex, endIndex);
-//    OrientationSensorFrame *averagedFrame = new OrientationSensorFrame(*_frames[startIndex]);
-//
-//    /* If aThreshold is greater than zero, then calculate
-//     * the movement of each sensor so you can check if it
-//     * is greater than aThreshold.
-//     */
-//    if (aThreshold > 0.0)
-//    {
-//        minW = new double [_numOrientationSensors];
-//        minX = new double [_numOrientationSensors];
-//        minY = new double [_numOrientationSensors];
-//        minZ = new double [_numOrientationSensors];
-//        maxW = new double [_numOrientationSensors];
-//        maxX = new double [_numOrientationSensors];
-//        maxY = new double [_numOrientationSensors];
-//        maxZ = new double [_numOrientationSensors];
-//        for (int i = 0; i < _numOrientationSensors; i++)
-//        {
-//            minW[i] = minX[i] = minY[i] = minZ[i] = SimTK::Infinity;
-//            maxW[i] = maxX[i] = maxY[i] = maxZ[i] = -SimTK::Infinity;
-//        }
-//    }
-//
-//    /* Initialize all the averaged sensor orientations to 1,0,0,0. Then
-//     * loop through the frames to be averaged, adding each marker location
-//     * to averagedFrame. Keep track of the min/max XYZ for each marker
-//     * so you can compare it to aThreshold when you're done.
-//     */
-//    for (int i = 0; i < _numOrientationSensors; i++)
-//    {
-//        int numFrames = 0;
-//        Vec3& avePt = averagedFrame->updOrientationSensor(i);
-//        avePt = Vec3(0);
-//
-//        for (int j = startIndex; j <= endIndex; j++)
-//        {
-//            Vec3& pt = _frames[j]->updMarker(i);
-//            if (!pt.isNaN())
-//            {
-//                Vec3& coords = pt; //.get();
-//                avePt += coords;
-//                numFrames++;
-//                if (aThreshold > 0.0)
-//                {
-//                    if (coords[0] < minX[i])
-//                        minX[i] = coords[0];
-//                    if (coords[0] > maxX[i])
-//                        maxX[i] = coords[0];
-//                    if (coords[1] < minY[i])
-//                        minY[i] = coords[1];
-//                    if (coords[1] > maxY[i])
-//                        maxY[i] = coords[1];
-//                    if (coords[2] < minZ[i])
-//                        minZ[i] = coords[2];
-//                    if (coords[2] > maxZ[i])
-//                        maxZ[i] = coords[2];
-//                }
-//            }
-//        }
-//
-//        /* Now divide by the number of frames to get the average. */
-//        if (numFrames > 0)
-//            avePt /= (double)numFrames;
-//        else
-//            avePt = Vec3(SimTK::NaN) ;//(SimTK::NaN, SimTK::NaN, SimTK::NaN);
-//    }
-//
-//    /* Store the indices from the file of the first frame and
-//     * last frame that were averaged, so you can report them later.
-//     */
-//    int startUserIndex = _frames[startIndex]->getFrameNumber();
-//    int endUserIndex = _frames[endIndex]->getFrameNumber();
-//
-//    /* Now delete all the existing frames and insert the averaged one. */
-//    _frames.clearAndDestroy();
-//    _frames.append(averagedFrame);
-//    _numFrames = 1;
-//    _firstFrameNumber = _frames[0]->getFrameNumber();
-//
-//    if (aThreshold > 0.0)
-//    {
-//        for (int i = 0; i < _numOrientationSensors; i++)
-//        {
-//            Vec3& pt = _frames[0]->updMarker(i);
-//
-//            if (pt.isNaN())
-//            {
-//                cout << "___WARNING___: marker " << _orientationSensorNames[i] << " is missing in frames " << startUserIndex
-//                      << " to " << endUserIndex << ". Coordinates will be set to NAN." << endl;
-//            }
-//            else if (maxX[i] - minX[i] > aThreshold ||
-//                      maxY[i] - minY[i] > aThreshold ||
-//                      maxZ[i] - minZ[i] > aThreshold)
-//            {
-//                double maxDim = maxX[i] - minX[i];
-//                maxDim = MAX(maxDim, (maxY[i] - minY[i]));
-//                maxDim = MAX(maxDim, (maxZ[i] - minZ[i]));
-//                cout << "___WARNING___: movement of marker " << _orientationSensorNames[i] << " in " << _fileName
-//                      << " is " << maxDim << " (threshold = " << aThreshold << ")" << endl;
-//            }
-//        }
-//    }
-//
-//    cout << "Averaged frames from time " << aStartTime << " to " << aEndTime << " in " << _fileName
-//          << " (frames " << startUserIndex << " to " << endUserIndex << ")" << endl;
-//
-//    if (aThreshold > 0.0)
-//    {
-//        delete [] minX;
-//        delete [] minY;
-//        delete [] minZ;
-//        delete [] maxX;
-//        delete [] maxY;
-//        delete [] maxZ;
-//    }
-//}
+void OrientationSensorData::averageFrames(double aThreshold, double aStartTime, double aEndTime) {
+  if (_numFrames < 2)
+    return;
+
+  int startIndex = 0, endIndex = 1;
+  findFrameRange(aStartTime, aEndTime, startIndex, endIndex);
+
+  OrientationSensorFrame *averagedFrame = new OrientationSensorFrame(*_frames[startIndex]);
+
+  for (int i = 0; i < _numOrientationSensors; i++) {
+    SimTK::Mat44 A;
+    A.setToZero();
+    int nEffectiveFrames = 0;
+    SimTK::Quaternion& avg = averagedFrame->updOrientationSensor(i);
+    avg = SimTK::Quaternion();
+    for (int j = startIndex; j <= endIndex; j++) {
+      SimTK::Quaternion q = _frames.get(j)->updOrientationSensor(i);
+      if (!(q.isNaN() || q.isInf())) {
+        A = q * ~q + A;
+        nEffectiveFrames++;
+      }
+    }
+    A = (1.0 / nEffectiveFrames) * A;
+    SimTK::Matrix a(A);
+    SimTK::Eigen eigen(a);
+    SimTK::Vector_<std::complex<double> > values; // should get sized automatically to 4 by getAllEigenValuesAndVectors()
+    SimTK::Matrix_<std::complex<double> > vectors;
+    eigen.getAllEigenValuesAndVectors(values, vectors);
+    double max = 0.0;
+    int maxIndex = 0;
+    for (int w = 0; w < values.size(); ++w) {
+      if (values[w].real() > max) {
+        max = values[w].real();
+        maxIndex = w;
+      }
+    }
+    for(int k=0; k< 4; ++k)
+      avg[k] = vectors.col(maxIndex).getElt(k, maxIndex).real();
+  }
+
+  int startUserIndex = _frames[startIndex]->getFrameNumber();
+  int endUserIndex = _frames[endIndex]->getFrameNumber();
+  std::cout << "Averaged frames from time " << aStartTime << " to " << aEndTime << " in " << _fileName
+       << " (frames " << startUserIndex << " to " << endUserIndex << ")" << std::endl;
+  _frames.clearAndDestroy();
+  _frames.append(averagedFrame);
+  _numFrames = 1;
+  _firstFrameNumber = _frames[0]->getFrameNumber();
+}
 
 //=============================================================================
 // GET AND SET
