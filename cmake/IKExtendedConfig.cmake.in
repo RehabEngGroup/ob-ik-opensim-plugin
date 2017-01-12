@@ -1,0 +1,6 @@
+#CMake configuration file for IKExtended
+@PACKAGE_INIT@
+
+set_and_check(IKExtended_INCLUDE_DIRS @PACKAGE_CMAKE_INSTALL_INCLUDEDIR@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/IKExtendedTargets.cmake")
