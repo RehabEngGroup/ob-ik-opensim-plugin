@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     OpenSim::OrientationSensor* oSens = dynamic_cast<OpenSim::OrientationSensor*>(&modelComponentSet.get(i));
     if (oSens) {
       std::string nameSens = oSens->getName();
-      oSens->connectOSensorToModel(model);
+      oSens->connectToModel(model);
       std::string nameBody = oSens->getBody().getName();
       std::cout << "Name: " << nameSens << " Body" << nameBody << std::endl;
     }

@@ -9,10 +9,10 @@
 
 int main(int argc, char* argv[]) {
 
-  OpenSim::Object::registerType(OpenSim::OrientationSensor());
-  OpenSim::Object::registerType(OpenSim::IKExtendedTaskSet());
-  OpenSim::Object::registerType(OpenSim::IKOrientationSensorTask());
-  OpenSim::Object::registerType(OpenSim::InverseKinematicsExtendedTool());
+ // OpenSim::Object::registerType(OpenSim::OrientationSensor());
+ // OpenSim::Object::registerType(OpenSim::IKExtendedTaskSet());
+ // OpenSim::Object::registerType(OpenSim::IKOrientationSensorTask());
+ // OpenSim::Object::registerType(OpenSim::InverseKinematicsExtendedTool());
 
   if (argc < 3) {
     std::cout << "Please provide a model and an Extended IK setup file" << std::endl;
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   std::string modelFileName = argv[1];
   OpenSim::Model model(modelFileName);
   std::cout << "Loaded model " << model.getName() << std::endl;
-  OpenSim::ComponentSet &modelComponentSet = model.updMiscModelComponentSet();
+ /* OpenSim::ComponentSet &modelComponentSet = model.updMiscModelComponentSet();
   OpenSim::OrientationSensorSet modelOSensorSet;
   std::cout << modelComponentSet.getSize() << std::endl;
   for (int i = 0; i < modelComponentSet.getSize(); ++i) {
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     }
     else
       std::cout << "Not an osensor" << std::endl;
-  }
+  }*/
 
   OpenSim::InverseKinematicsExtendedTool ik(argv[2]);
 

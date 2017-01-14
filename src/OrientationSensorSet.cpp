@@ -174,7 +174,7 @@ OrientationSensor* OrientationSensorSet::addOrientationSensor(const string& aNam
     m->setRotationOffset(aRotationOffset);
     // Body will be based on this name when orientation sensor is connected to Model.
     m->setBodyName(aBody.getName());
-    m->connectOSensorToModel(aBody.getModel());
+    m->connectToModel(aBody.updModel());
     adoptAndAppend(m);
 
     return m;

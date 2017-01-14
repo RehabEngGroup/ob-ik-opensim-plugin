@@ -45,7 +45,8 @@ set (IKExtended_OpenSim_Simulation_Model_HEADERS
 set (IKExtended_OpenSim_Simulation_HEADERS
                         include/OpenSim/Simulation/OrientationSensorsReference.h
                         include/OpenSim/Simulation/InverseKinematicsExtendedSolver.h
-                        include/OpenSim/Simulation/osimExtendedIKDLL.h)
+                        include/OpenSim/Simulation/osimExtendedIKDLL.h
+                        include/OpenSim/Simulation/RegisterTypes_osimExtendedIK.h)
                         
 set (IKExtended_OpenSim_Common_HEADERS
                         include/OpenSim/Common/OrientationSensorFrame.h
@@ -68,7 +69,8 @@ set (IKExtended_SOURCES src/OrientationSensor.cpp
                         src/OrientationSensorsReference.cpp
                         src/InverseKinematicsExtendedSolver.cpp
                         src/IKOrientationSensorTask.cpp
-                        src/InverseKinematicsExtendedTool.cpp)
+                        src/InverseKinematicsExtendedTool.cpp
+                        src/RegisterTypes_osimExtendedIK.cpp)
 
 add_library(IKExtended ${IKExtended_HEADERS} ${IKExtended_SOURCES})
 target_link_libraries(IKExtended ${OPENSIMSIMBODY_LIBRARIES})

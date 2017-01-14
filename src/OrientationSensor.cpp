@@ -13,7 +13,7 @@ using namespace OpenSim;
 using SimTK::Vec3;
 
 // TODO: Fix visualization functions and variables
-//Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03);
+Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03);
 //=============================================================================
 // CONSTRUCTOR(S) AND DESTRUCTOR
 //=============================================================================
@@ -26,7 +26,9 @@ ModelComponent()
 {
     setNull();
     constructProperties();
- //   _displayer.setOwner(this);
+    _displayer.setOwner(this);
+    _displayer.addGeometry(_defaultGeometry);
+    _displayer.setShowAxes(true);
 }
 
 //_____________________________________________________________________________
@@ -47,14 +49,12 @@ void OrientationSensor::registerTypes()
 *
 * @param aOSensor oSensor to be copied.
 */
-//OrientationSensor::OrientationSensor(const OrientationSensor &aOSensor) :
-//ModelComponent(aOSensor)
-//{
-//    setNull();
-//    constructProperties();
-//    copyData(aOSensor);
-//    _displayer.setOwner(this);
-//}
+OrientationSensor::OrientationSensor(const OrientationSensor &aOSensor) :
+ModelComponent(aOSensor)
+{
+    copyData(aOSensor);
+    _displayer.setOwner(this);
+}
 
 //=============================================================================
 // CONSTRUCTION METHODS
@@ -65,12 +65,16 @@ void OrientationSensor::registerTypes()
 *
 * @param aOSensor oSensor to be copied.
 */
-//void OrientationSensor::copyData(const OrientationSensor &aOSensor)
-//{
-//    _body = NULL;
-//    _displayer = aOSensor._displayer;
-//    _virtual = aOSensor._virtual;
-//}
+void OrientationSensor::copyData(const OrientationSensor &aOSensor)
+{
+    _body = aOSensor._body; //TODO check if correct
+    _displayer = aOSensor._displayer;
+    _virtual = aOSensor._virtual;
+    copyProperty_body(aOSensor);
+    copyProperty_fixed(aOSensor);
+    copyProperty_position_offset(aOSensor);
+    copyProperty_rotation_offset(aOSensor);
+}
 
 //_____________________________________________________________________________
 /**
@@ -102,9 +106,9 @@ void OrientationSensor::constructProperties()
 *
 * @param aEngine dynamics engine containing this Marker.
 */
-void OrientationSensor::connectOSensorToModel(const Model& aModel)
+void OrientationSensor::connectToModel(Model& aModel)
 {
-
+    Super::connectToModel(aModel);
     _model = &aModel;
 
     if (get_body() != "")
@@ -118,6 +122,25 @@ void OrientationSensor::connectOSensorToModel(const Model& aModel)
                 " does not exist in model " + aModel.getName();
             throw Exception(errorMessage);
         }
+        //TODO ELENA: adapt this to new properties
+        // If marker jumped between bodies we need to fix display stuff
+        //if (oldBody && oldBody->getName() != _body->getName()){
+        //    oldBody->updDisplayer()->removeDependent(&_displayer);
+        //}
+        // Todo_AYMAN: make code below safe to call multiple times (since this
+        // method may be called multiple times for a marker). Should also try
+        // to handle case where a marker is deleted (e.g. in
+        // SimbodyEngine::updateMarkerSet) because then may end up with
+        // stale pointers.
+        VisibleObject* ownerBodyDisplayer;
+        if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
+            if (!ownerBodyDisplayer->hasDependent(&_displayer)){	// Only if first time to be encountered
+                ownerBodyDisplayer->addDependent(&_displayer);
+            }
+        }
+        _displayer.setOwner(this);
+        updateGeometry();
+
     }
     else
     {
@@ -131,15 +154,15 @@ void OrientationSensor::connectOSensorToModel(const Model& aModel)
 /**
 * Remove self from the list of displayable objects and free resources
 */
-//void OrientationSensor::removeSelfFromDisplay()
-//{
-//    VisibleObject* ownerBodyDisplayer;
-//    if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
-//        if (ownerBodyDisplayer->hasDependent(&_displayer)){
-//            ownerBodyDisplayer->removeDependent(&_displayer);
-//        }
-//    }
-//}
+void OrientationSensor::removeSelfFromDisplay()
+{
+    VisibleObject* ownerBodyDisplayer;
+    if (_body && (ownerBodyDisplayer = _body->updDisplayer())){
+        if (ownerBodyDisplayer->hasDependent(&_displayer)){
+            ownerBodyDisplayer->removeDependent(&_displayer);
+        }
+    }
+}
 //=============================================================================
 // OPERATORS
 //=============================================================================
@@ -149,15 +172,15 @@ void OrientationSensor::connectOSensorToModel(const Model& aModel)
 *
 * @return Reference to this object.
 */
-//OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker)
-//{
-//    // BASE CLASS
-//    Object::operator=(aMarker);
-//
-//    copyData(aMarker);
-//
-//    return(*this);
-//}
+OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker)
+{
+    // BASE CLASS
+    Object::operator=(aMarker);
+
+    copyData(aMarker);
+
+    return(*this);
+}
 
 //=============================================================================
 // UTILITY
@@ -210,7 +233,7 @@ void OrientationSensor::changeBody(OpenSim::Body& aBody)
         return;
 
     set_body(aBody.getName());
-    connectOSensorToModel(aBody.getModel());
+    connectToModel(aBody.updModel());
 }
 
 //_____________________________________________________________________________
@@ -236,7 +259,7 @@ void OrientationSensor::changeBodyPreserveLocation(const SimTK::State& s, OpenSi
     //TODO handle rotation
     //aBody.getModel().getSimbodyEngine().get
     set_body(aBody.getName());
-    connectOSensorToModel(aBody.getModel());
+    connectToModel(aBody.updModel());
 }
 
 //=============================================================================
@@ -260,13 +283,13 @@ void OrientationSensor::scale(const SimTK::Vec3& aScaleFactors)
 void OrientationSensor::setPositionOffset(const SimTK::Vec3& offset)
 {
     set_position_offset(offset);
-  //  updateGeometry();
+    updateGeometry();
 }
 
 void OrientationSensor::setRotationOffset(const SimTK::Vec3& offset)
 {
     set_rotation_offset(offset);
-   // updateGeometry();
+    updateGeometry();
 }
 
 void OrientationSensor::setBodyName(const std::string aBodyName)
@@ -286,13 +309,22 @@ SimTK::Vec3 OrientationSensor::getRotationOffset(){
 /**
 * Update the geometry to correspond to position changes
 */
-//void OrientationSensor::updateGeometry()
-//{
-//    Transform position;
-//    position.setP(get_position_offset());
-//    SimTK::Rotation rot;
-//    rot.setRotationToBodyFixedXYZ(get_rotation_offset());
-//    position.updR() = SimTK::Rotation(rot);
-//    updDisplayer()->setTransform(position);
-//
-//}
+void OrientationSensor::updateGeometry()
+{
+    Transform position;
+    position.setP(get_position_offset());
+    SimTK::Rotation rot;
+    rot.setRotationToBodyFixedXYZ(get_rotation_offset());
+    position.updR() = SimTK::Rotation(rot);
+    updDisplayer()->setTransform(position);
+
+}
+
+void OrientationSensor::generateDecorations(bool fixed, const ModelDisplayHints& hints, const SimTK::State& state, SimTK::Array_<SimTK::DecorativeGeometry>& appendToThis) const
+{
+    Super::generateDecorations(fixed, hints, state, appendToThis);
+    if (fixed == false) {
+        const Vec3 pink(1, .6, .8);
+        appendToThis.push_back(SimTK::DecorativeCylinder(0.01, 0.03).setBodyId(this->getBody().getIndex()).setColor(pink).setTransform(getDisplayer()->getTransform()));
+    }
+}

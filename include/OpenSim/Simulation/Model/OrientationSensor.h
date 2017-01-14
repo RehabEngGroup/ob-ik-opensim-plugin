@@ -54,10 +54,10 @@ namespace OpenSim {
         OpenSim::Body* _body;
 
         // Support for Display
-       // VisibleObject _displayer;
+        VisibleObject _displayer;
 
         /** A temporary kluge until the default mechanism is working */
-       // static Geometry *_defaultGeometry;
+        static Geometry *_defaultGeometry;
         bool _virtual;
 
         //=============================================================================
@@ -68,34 +68,35 @@ namespace OpenSim {
         //--------------------------------------------------------------------------
     public:
         OrientationSensor();
-    //    OrientationSensor(const OrientationSensor &aOSensor);
+        OrientationSensor(const OrientationSensor &aOSensor);
         static void registerTypes();
         virtual ~OrientationSensor();
 
         static void deleteOSensor(OrientationSensor* aOSensor) { if (aOSensor) delete aOSensor; }
 
 //#ifndef SWIG
-//        OrientationSensor& operator=(const OrientationSensor &aOSensor);
+        OrientationSensor& operator=(const OrientationSensor &aOSensor);
 //#endif
-//        void copyData(const OrientationSensor &aOSensor);
+        void copyData(const OrientationSensor &aOSensor);
 
         virtual void updateFromOSensor(const OrientationSensor &aOSensor);
         virtual OpenSim::Body& getBody() const { return *_body; }
         virtual void changeBody(OpenSim::Body& aBody);
         virtual void changeBodyPreserveLocation(const SimTK::State& s, OpenSim::Body& aBody);
         virtual void scale(const SimTK::Vec3& aScaleFactors);
-        virtual void connectOSensorToModel(const Model& aModel);
+        virtual void connectToModel(Model& aModel) OVERRIDE_11;
         void setPositionOffset(const SimTK::Vec3& offset);
         void setRotationOffset(const SimTK::Vec3& offset);
         SimTK::Vec3 getPositionOffset();
         SimTK::Vec3 getRotationOffset();
         void setBodyName(const std::string aBodyName);
-      //  virtual void updateGeometry();
+        virtual void updateGeometry();
 
-      //  virtual const VisibleObject* getDisplayer() const { return &_displayer; }
-      //  virtual VisibleObject*	updDisplayer() { return &_displayer; };
+        virtual const VisibleObject* getDisplayer() const { return &_displayer; }
+        virtual VisibleObject*	updDisplayer() { return &_displayer; };
+        virtual void generateDecorations(bool fixed, const ModelDisplayHints& hints, const SimTK::State& state, SimTK::Array_<SimTK::DecorativeGeometry>& appendToThis) const OVERRIDE_11;
 
-       // virtual void removeSelfFromDisplay();
+        virtual void removeSelfFromDisplay();
         const bool isVirtual()
         {
             return _virtual;
