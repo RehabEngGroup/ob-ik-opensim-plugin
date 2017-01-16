@@ -13,7 +13,7 @@ using namespace OpenSim;
 using SimTK::Vec3;
 
 // TODO: Fix visualization functions and variables
-Geometry *OrientationSensor::_defaultGeometry = new AnalyticCylinder(0.01, 0.03);
+Geometry *OrientationSensor::_defaultGeometry = new AnalyticEllipsoid(0.04, 0.02, 0.01);
 //=============================================================================
 // CONSTRUCTOR(S) AND DESTRUCTOR
 //=============================================================================
@@ -325,6 +325,6 @@ void OrientationSensor::generateDecorations(bool fixed, const ModelDisplayHints&
     Super::generateDecorations(fixed, hints, state, appendToThis);
     if (fixed == false) {
         const Vec3 pink(1, .6, .8);
-        appendToThis.push_back(SimTK::DecorativeCylinder(0.01, 0.03).setBodyId(this->getBody().getIndex()).setColor(pink).setTransform(getDisplayer()->getTransform()));
+        appendToThis.push_back(SimTK::DecorativeBrick(SimTK::Vec3(0.04, 0.02, 0.01)).setBodyId(this->getBody().getIndex()).setColor(pink).setTransform(getDisplayer()->getTransform()));
     }
 }
