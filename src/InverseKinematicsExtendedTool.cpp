@@ -54,6 +54,20 @@ using namespace OpenSim;
 using namespace std;
 using namespace SimTK;
 
+inline bool isAbsolute(const char *path) {
+  if (path[0] == '/' || path[0] == '\\') {
+    return true;
+  }
+  std::string str(path);
+  if (str.length()>1) {
+    if (str[1] == ':') {
+      return true;
+    }
+  }
+  return false;
+};
+
+
 //=============================================================================
 // CONSTRUCTOR(S) AND DESTRUCTOR
 //=============================================================================
@@ -110,10 +124,10 @@ InverseKinematicsExtendedTool::InverseKinematicsExtendedTool(const string &aFile
 {
     setNull();
     updateFromXMLDocument();
+    std::string pathToSetupFile = IO::getParentDirectory(aFileName);
 
-    if(aLoadModel) {
-        //loadModel(aFileName);
-    }
+    if (!isAbsolute(_modelFileName.c_str()))
+      _modelFileName = pathToSetupFile + _modelFileName;
 }
 //_____________________________________________________________________________
 /**
@@ -277,7 +291,8 @@ bool InverseKinematicsExtendedTool::run()
             modelFromFile = false;
 
         _model->printBasicInfo(std::cout);
-
+        //TODO: Add this as parameter from xml
+        _model->setUseVisualizer(true);
         // Do the maneuver to change then restore working directory
         // so that the parsing code behaves properly if called from a different directory.
         string saveWorkingDirectory = IO::getCwd();
