@@ -438,7 +438,7 @@ bool InverseKinematicsExtendedTool::run()
 
         Storage *modelMarkerLocations = _reportMarkerLocations ? new Storage(Nframes, "ModelMarkerLocations") : NULL;
         Storage *modelMarkerErrors = _reportErrors ? new Storage(Nframes, "ModelMarkerErrors") : NULL;
-      //  Storage *modelOSensorErrors = _reportErrors ? new Storage(Nframes, "ModelOsensorErrors") : NULL; //TODO print file if requested
+        Storage *modelOSensorErrors = _reportErrors ? new Storage(Nframes, "ModelOsensorErrors") : NULL;
 
         for (int i = 0; i < Nframes; i++) {
             s.updTime() = start_time + i*dt;
@@ -512,6 +512,11 @@ bool InverseKinematicsExtendedTool::run()
                 cout << ", RMS angular error = " << SimTK::convertRadiansToDegrees(rmsError) << " degs";
                 cout << ", max absolute angular error = " << SimTK::convertRadiansToDegrees(maxOSensorError) << " degs ( " << ikSolver->getOSensorNameForIndex(worstOSensor) << " )" << endl;
 
+                Array<double> sensorErrors(0.0, 3);
+                sensorErrors.set(0, totalError);
+                sensorErrors.set(1, rmsError);
+                sensorErrors.set(2, maxOSensorError);
+                modelOSensorErrors->append(s.getTime(), 3, &sensorErrors[0]);
               }
             }
             kinematicsReporter.step(s, i);
@@ -539,6 +544,25 @@ bool InverseKinematicsExtendedTool::run()
             Storage::printResult(modelMarkerErrors, errorFileName, getResultsDir(), -1, ".sto");
 
             delete modelMarkerErrors;
+        }
+
+        // Write oSensors tracking errors file (.sto)
+        if (nos>0 && modelOSensorErrors) {
+          Array<string> labels("", 4);
+          labels[0] = "time";
+          labels[1] = "total_angular_error";
+          labels[2] = "oSensor_error_RMS";
+          labels[3] = "oSensor_error_max";
+
+          modelOSensorErrors->setColumnLabels(labels);
+          modelOSensorErrors->setName("Model oSensor Errors from IK");
+          modelOSensorErrors->setInDegrees(false);
+
+          IO::makeDir(getResultsDir());
+          string errorFileName = trialName + "_ik_oSensor_errors";
+          Storage::printResult(modelOSensorErrors, errorFileName, getResultsDir(), -1, ".sto");
+
+          delete modelOSensorErrors;
         }
 
         if(nm >0 && modelMarkerLocations){
