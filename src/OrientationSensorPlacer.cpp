@@ -250,15 +250,14 @@ bool OrientationSensorPlacer::processModel(SimTK::State& s, Model* aModel, const
   if (!getApply())
     return false;
   cout << endl << "Step 3: Placing oSensor on model" << endl;
-  // Load the static pose oSensor file, and average all the frames in the user-specified time range.
 
+  // Load the static pose oSensor file, and average all the frames in the user-specified time range.
   OrientationSensorData staticPose(aPathToSubject + _oSensorFileName);
   if (_timeRange.getSize() < 2)
     throw Exception("OrientationSensorPlacer::processModel, time_range is unspecified.");
-
   staticPose.averageFrames(_maxOSensorMovement, _timeRange[0], _timeRange[1]);
 
-   // Create references and WeightSets needed to initialize InverseKinemaicsSolver
+  // Create references and WeightSets needed to initialize InverseKinemaicsSolver
   Set<OrientationSensorWeight> oSensorWeightSet;
   _ikExtendedTaskSet.createOrientationSensorsWeightSet(oSensorWeightSet); // order in tasks file
   OrientationSensorsReference oSensorsReference(staticPose, &oSensorWeightSet);
@@ -348,13 +347,6 @@ bool OrientationSensorPlacer::processModel(SimTK::State& s, Model* aModel, const
   if (_outputStorage != NULL) {
     delete _outputStorage;
   }
-
-  // TODO: check if make sense to keep it
-  //Storage oSensorStorage;
-  //staticPose.makeRdStorage(*_outputStorage);
-  //_outputStorage->getStateVector(0)->setTime(s.getTime());
-  //statesReporter.updStatesStorage().addToRdStorage(*_outputStorage, s.getTime(), s.getTime());
-  //_outputStorage->print("statesReporterOutputWithMarkers.sto");
 
   if (_printResultFiles) {
     if (!_outputModelFileNameProp.getValueIsDefault())

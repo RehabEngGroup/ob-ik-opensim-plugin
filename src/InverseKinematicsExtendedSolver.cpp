@@ -397,14 +397,6 @@ namespace OpenSim {
     return computeCurrentSquaredMarkerError(index);
   }
 
-  //double InverseKinematicsExtendedSolver::computeCurrentSquaredOSensorError(const std::string &sensorName)
-  //{
-  //    const Array_<std::string> &names = _orientationSensorsReference.getNames();
-  //    SimTK::Array_<const std::string>::iterator p = std::find(names.begin(), names.end(), sensorName);
-  //    int index = (int)std::distance(names.begin(), p);
-  //    return computeCurrentSquaredOSensorError(index);
-  //}
-
   double InverseKinematicsExtendedSolver::computeCurrentSquaredMarkerError(int markerIndex)
   {
     if (markerIndex >= 0 && markerIndex < _markerAssemblyCondition->getNumMarkers()) {
@@ -413,15 +405,6 @@ namespace OpenSim {
     else
       throw Exception("InverseKinematicsExtendedSolver::computeCurrentMarkerSquaredError: invalid markerIndex.");
   }
-
-  //double InverseKinematicsExtendedSolver::computeCurrentSquaredOSensorError(int sensorIndex)
-  //{
-  //    if (sensorIndex >= 0 && sensorIndex < _orientationSensorAssemblyCondition->getNumOSensors()){
-  //        return _orientationSensorAssemblyCondition->findCurrentOSensorErrorSquared(SimTK::OrientationSensors::OSensorIx(sensorIndex));
-  //    }
-  //    else
-  //        throw Exception("InverseKinematicsExtendedSolver::computeCurrentMarkerSquaredError: invalid markerIndex.");
-  //}
 
   /** Compute and return the distance errors between all model marker and observations. */
   void InverseKinematicsExtendedSolver::computeCurrentSquaredMarkerErrors(SimTK::Array_<double> &markerErrors)

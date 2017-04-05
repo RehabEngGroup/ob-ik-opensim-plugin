@@ -171,12 +171,8 @@ public:
     double computeCurrentSquaredMarkerError(const std::string &markerName);
     double computeCurrentSquaredMarkerError(int markerIndex);
 
-    //double computeCurrentSquaredOSensorError(const std::string &sensorName); // TODO: check if useful
-    //double computeCurrentSquaredOSensorError(int sensorIndex); // TODO: check if useful
-
     /** Compute and return the distance errors between all model marker and observations. */
     void computeCurrentSquaredMarkerErrors(SimTK::Array_<double> &markerErrors);
-    //void computeCurrentSquaredOSensorErrors(SimTK::Array_<double> &sensorErrors); // TODO: check if useful
 
     /** Marker locations and errors may be computed in an order that is different
         from tasks file or listed in the model. Return the corresponding marker
