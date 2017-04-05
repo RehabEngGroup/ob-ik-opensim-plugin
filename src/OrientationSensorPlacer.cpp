@@ -372,7 +372,8 @@ bool OrientationSensorPlacer::processModel(SimTK::State& s, Model* aModel, const
       cout << "Wrote oSensor file " << _outputOSensorFileName << " from model " << aModel->getName() << endl;
     }
 
-    if (!_outputMotionFileNameProp.getValueIsDefault()) {
+    // Write static pose (.mot)
+    if (!_outputMotionFileNameProp.getValueIsDefault() && _outputMotionFileName != "Unassigned") {
       // Make a storage file containing the solved static pose state.
       // Requires a new state, previous one is messed up
       SimTK::State& st = aModel->initSystem();
