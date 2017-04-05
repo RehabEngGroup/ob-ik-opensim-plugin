@@ -358,12 +358,19 @@ bool OrientationSensorPlacer::processModel(SimTK::State& s, Model* aModel, const
       cout << "Wrote model file " << _outputModelFileName << " from model " << aModel->getName() << endl;
     }
 
-    //TODO: Fix xml writing for oSensorsSet
-    //if (!_outputOSensorFileNameProp.getValueIsDefault() && _outputOSensorFileName != "Unassigned")
-    //{
-    //  aModel->writeMarkerFile(aPathToSubject + _outputOSensorFileName);
-    //  cout << "Wrote oSensor file " << _outputOSensorFileName << " from model " << aModel->getName() << endl;
-    //}
+    // XML writing for orientationSensorsSet, still dirty since not directly supported by model
+    if (!_outputOSensorFileNameProp.getValueIsDefault() && _outputOSensorFileName != "Unassigned") {
+      OpenSim::ComponentSet &modelComponentSet = aModel->updMiscModelComponentSet();
+      OpenSim::OrientationSensorSet modelOSensorSet;
+      for (int i = 0; i < modelComponentSet.getSize(); ++i) {
+        OpenSim::OrientationSensor* oSens = dynamic_cast<OpenSim::OrientationSensor*>(&modelComponentSet.get(i));
+        if (oSens)
+          modelOSensorSet.cloneAndAppend(*oSens);
+      }
+      modelOSensorSet.setName("OrientationSensorSet_from_model_"+aModel->getName());
+      modelOSensorSet.print(aPathToSubject + _outputOSensorFileName);
+      cout << "Wrote oSensor file " << _outputOSensorFileName << " from model " << aModel->getName() << endl;
+    }
 
     if (!_outputMotionFileNameProp.getValueIsDefault()) {
       // Make a storage file containing the solved static pose state.
