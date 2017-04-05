@@ -313,26 +313,31 @@ bool OrientationSensorPlacer::processModel(SimTK::State& s, Model* aModel, const
 
   // Call realize Position so that the transforms are updated and oSensors can be moved correctly
   aModel->getMultibodySystem().realize(s, SimTK::Stage::Position);
+
   // Report oSensor errors to assess the quality
   int nos = oSensorWeightSet.getSize();
   SimTK::Array_<double> oSensorErrors(nos, 0.0);
-  SimTK::Array_<Vec3> oSensorOrientations(nos, Vec3(0));
-  double totalSquaredOSensorError = 0.0;
+  double totalError = 0.0;
   double maxOSensorError = 0.0;
-  int worst = -1;
-  // Report in the same order as the oSensor tasks/weights
+  double squaredSum = 0.0;
+  int worstOSensor = -1;
+
   ikSol->computeCurrentOSensorErrors(oSensorErrors);
+
   for (int j = 0; j < nos; ++j) {
-    totalSquaredOSensorError += oSensorErrors[j] * oSensorErrors[j];
+    totalError +=oSensorErrors[j];
+    squaredSum += SimTK::square(oSensorErrors[j]);
     if (oSensorErrors[j] > maxOSensorError) {
       maxOSensorError = oSensorErrors[j];
-      worst = j;
+      worstOSensor = j;
     }
   }
-  cout << "Frame at (t=" << s.getTime() << "):\t";
-  cout << "total squared error = " << totalSquaredOSensorError;
-  cout << ", oSensor error: RMS=" << sqrt(totalSquaredOSensorError / nos);
-  cout << ", max=" << maxOSensorError << " (" << ikSol->getOSensorNameForIndex(worst) << ")" << endl;
+  double rmsError = sqrt(squaredSum / nos);
+
+  cout << "OSensors tracking - Frame at (t=" << s.getTime() << "):\t";
+  cout << "total absolute angular error = " << SimTK::convertRadiansToDegrees(totalError) << " degs";
+  cout << ", RMS angular error = " << SimTK::convertRadiansToDegrees(rmsError) << " degs";
+  cout << ", max absolute angular error = " << SimTK::convertRadiansToDegrees(maxOSensorError) << " degs ( " << ikSol->getOSensorNameForIndex(worstOSensor) << " )" << endl;
 
   /* Now move the non-fixed oSensor on the model so that they are coincident
    * with the measured oSensor in the static pose. The model is already in

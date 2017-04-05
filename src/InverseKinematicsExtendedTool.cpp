@@ -486,27 +486,31 @@ bool InverseKinematicsExtendedTool::run()
                 }
               }
 
+              // Report oSensor errors to assess the quality
               if(nos>0) {
-                Array<double> sensorErrors(0.0, 3);
-                double totalOSensorError = 0.0;
+
+                SimTK::Array_<double> oSensorErrors(nos, 0.0);
+                double totalError = 0.0;
                 double maxOSensorError = 0.0;
+                double squaredSum = 0.0;
                 int worstOSensor = -1;
+
                 ikSolver->computeCurrentOSensorErrors(oSensorErrors);
 
                 for (int j = 0; j < nos; ++j) {
-                  totalOSensorError += oSensorErrors[j];
+                  totalError +=oSensorErrors[j];
+                  squaredSum += SimTK::square(oSensorErrors[j]);
                   if (oSensorErrors[j] > maxOSensorError) {
                     maxOSensorError = oSensorErrors[j];
                     worstOSensor = j;
                   }
                 }
-                sensorErrors.set(0, totalOSensorError);
-                sensorErrors.set(1, 0);  // TODO : should be the rms error, not 0
-                sensorErrors.set(2, maxOSensorError);
-                //  modelOSensorErrors->append(s.getTime(), 3, &sensorErrors[0]);
-                std::cout << "total orientation sensor error = " << totalOSensorError;
-                //cout << ", marker error: RMS=" << rms;
-                std::cout << ", max=" << maxOSensorError << " (" << ikSolver->getOSensorNameForIndex(worstOSensor) << ")" << std::endl;
+                double rmsError = sqrt(squaredSum / nos);
+
+                cout << "OSensors tracking:\t";
+                cout << "total absolute angular error = " << SimTK::convertRadiansToDegrees(totalError) << " degs";
+                cout << ", RMS angular error = " << SimTK::convertRadiansToDegrees(rmsError) << " degs";
+                cout << ", max absolute angular error = " << SimTK::convertRadiansToDegrees(maxOSensorError) << " degs ( " << ikSolver->getOSensorNameForIndex(worstOSensor) << " )" << endl;
 
               }
             }
