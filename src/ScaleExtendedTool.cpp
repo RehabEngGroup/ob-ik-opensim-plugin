@@ -250,26 +250,27 @@ ScaleExtendedTool& ScaleExtendedTool::operator=(const ScaleExtendedTool &aSubjec
  *
  * @return Pointer to the Model that is created.
  */
-Model* ScaleExtendedTool::createModel()
-{
-  cout << "Processing subject " << getName() << endl;
-
+Model* ScaleExtendedTool::createModel() {
   /* Make the generic model. */
-  if (!_genericModelMakerProp.getValueIsDefault())
-  {
+  if (!_genericModelMakerProp.getValueIsDefault()){
     Model *model = _genericModelMaker.processModel(_pathToSubject);
-    if (!model)
-    {
+    if (!model) {
       cout << "===ERROR===: Unable to load generic model." << endl;
       return 0;
     }
     else {
-      model->setName(getName());
+      std::string newModelName = model->getName()+ " ";
+      if(getName() == "default")
+        newModelName += "Placer";
+      else
+        newModelName += getName();
+      model->setName(newModelName);
       return model;
     }
   }
   else {
-    cout << "ScaleExtendedTool.createModel: WARNING- Unscaled model not specified (" << _genericModelMakerProp.getName() << " section missing from setup file)." << endl;
+    cout << "ScaleExtendedTool.createModel: WARNING- Unscaled model not specified (" << _genericModelMakerProp.getName();
+    cout << " section missing from setup file)." << endl;
   }
   return 0;
 }
