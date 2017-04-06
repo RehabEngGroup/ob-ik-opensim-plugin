@@ -291,8 +291,8 @@ bool InverseKinematicsExtendedTool::run()
             modelFromFile = false;
 
         _model->printBasicInfo(std::cout);
-        //TODO: Add this as parameter from xml
-        _model->setUseVisualizer(true);
+        _model->setUseVisualizer(useVisualizer_);
+
         // Do the maneuver to change then restore working directory
         // so that the parsing code behaves properly if called from a different directory.
         string saveWorkingDirectory = IO::getCwd();

@@ -147,6 +147,9 @@ public:
     void setCoordinateFileName(const std::string& coordDataFileName) { _coordinateFileName=coordDataFileName;};
     const std::string& getCoordinateFileName() const { return  _coordinateFileName;};
 
+    bool getUseVisualizer() {return useVisualizer_;};
+    void setUseVisualizer(bool useVisualizer) {useVisualizer_ = useVisualizer;};
+
     //const OpenSim::Storage& getOutputStorage() const;
 private:
     void setNull();
@@ -154,6 +157,7 @@ private:
 
     bool hasMarkerFile_ = false;
     bool hasOSensorFile_ = false;
+    bool useVisualizer_ = false;
 
     //--------------------------------------------------------------------------
     // OPERATORS
