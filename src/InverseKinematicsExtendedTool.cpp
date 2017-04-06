@@ -618,8 +618,8 @@ void InverseKinematicsExtendedTool::updateFromXMLNode(SimTK::Xml::Element& aNode
             if (root.getElementTag()=="OpenSimDocument"){
                 int curVersion = root.getRequiredAttributeValueAs<int>("Version");
                 if (curVersion <= 20201) root.setAttributeValue("Version", "20300");
-                Xml::element_iterator iter(root.element_begin("IKTool"));
-                iter->setElementTag("InverseKinematicsTool");
+                Xml::element_iterator iter(root.element_begin("IKExtendedTool"));
+                iter->setElementTag("ExtendedInverseKinematicsTool");
                 Xml::element_iterator toolIter(iter->element_begin("IKTrialSet"));
                 // No optimizer_algorithm specification anymore
                 Xml::element_iterator optIter(iter->element_begin("optimizer_algorithm"));
@@ -651,8 +651,8 @@ void InverseKinematicsExtendedTool::updateFromXMLNode(SimTK::Xml::Element& aNode
                 aNode = updDocument()->getRootDataElement();
             }
             else {
-                if (root.getElementTag()=="IKTool"){
-                    root.setElementTag("InverseKinematicsTool");
+                if (root.getElementTag()=="IKExtendedTool"){
+                    root.setElementTag("InverseKinematicsExtendedTool");
                     Xml::element_iterator toolIter(root.element_begin("IKTrialSet"));
                     if (toolIter== root.element_end())
                         throw (Exception("Old IKTool setup file doesn't have required IKTrialSet element.. Aborting"));
