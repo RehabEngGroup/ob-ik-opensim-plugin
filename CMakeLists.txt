@@ -95,8 +95,8 @@ install (FILES ${IKExtended_OpenSim_Simulation_Model_HEADERS}
 install (FILES ${IKExtended_OpenSim_Tools_HEADERS}
          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/OpenSim/Tools COMPONENT Development)
 
-add_executable(oSensorsIK testOSensorsIK.cpp )
-target_link_libraries(oSensorsIK IKExtended ${OPENSIMSIMBODY_LIBRARIES})
+add_executable(extendedIK extendedIK.cpp)
+target_link_libraries(extendedIK IKExtended ${OPENSIMSIMBODY_LIBRARIES})
 
 add_executable(testModelIO testModelIO.cpp)
 target_link_libraries(testModelIO IKExtended ${OPENSIMSIMBODY_LIBRARIES})
