@@ -32,17 +32,10 @@
  */
 
  // INCLUDES
-#include <string>
-#include <OpenSim/Common/Storage.h>
-#include <OpenSim/Common/IO.h>
+
+#include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Model.h>
-#include <OpenSim/Common/LoadOpenSimLibrary.h>
-#include <OpenSim/Simulation/Model/Model.h>
-#include <OpenSim/Simulation/Model/ComponentSet.h>
 #include "OpenSim/Tools/ScaleExtendedTool.h"
-#include "OpenSim/Tools/InverseKinematicsExtendedTool.h"
-#include "OpenSim/Tools/IKExtendedTaskSet.h"
-#include "OpenSim/Simulation/Model/OrientationSensorSet.h"
 
 using namespace std;
 
@@ -50,31 +43,34 @@ static void PrintUsage(const char *aProgName, ostream &aOStream);
 
 int main(int argc, char **argv) {
 
-  // SET OUTPUT FORMATTING
+  // Set output format
   OpenSim::IO::SetDigitsPad(4);
 
-  // REGISTER TYPES
+  // Register types
   OpenSim::ScaleExtendedTool::registerTypes();
 
-  // PARSE COMMAND LINE
   string inName;
   string option = "";
+
+  // No option provided, print usage options
   if (argc < 2) {
     PrintUsage(argv[0], cout);
     exit(EXIT_FAILURE);
   }
+
+  // Parse command line
   else {
     for (int i = 1; i <= (argc - 1); i++) {
       option = argv[i];
 
-      // PRINT THE USAGE OPTIONS
+      // Print usage options
       if ((option == "-help") || (option == "-h") || (option == "-Help") || (option == "-H") ||
         (option == "-usage") || (option == "-u") || (option == "-Usage") || (option == "-U")) {
         PrintUsage(argv[0], cout);
         exit(EXIT_SUCCESS);
-
-        // Identify the setup file
       }
+
+      // Identify the setup file
       else if ((option == "-S") || (option == "-Setup")) {
         if (argv[i + 1] == 0) {
           PrintUsage(argv[0], cout);
@@ -82,39 +78,36 @@ int main(int argc, char **argv) {
         }
         inName = argv[i + 1];
         break;
-
-        // Print a default setup file
       }
+
+      // Print a default setup file
       else if ((option == "-PrintSetup") || (option == "-PS")) {
         OpenSim::ScaleExtendedTool *subject = new OpenSim::ScaleExtendedTool();
         subject->setName("default");
+
         // Add in useful objects that may need to be instantiated
         OpenSim::Object::setSerializeAllDefaults(true);
-        subject->print("default_Setup_Scale.xml");
+        subject->print("default_Setup_oSensorPlacer.xml");
         OpenSim::Object::setSerializeAllDefaults(false);
-        cout << "Created file default_Setup_Scale.xml with default setup" << endl;
+        cout << "Created file default_Setup_oSensorPlacer.xml with default setup" << endl;
         exit(EXIT_SUCCESS);
-
-        // PRINT PROPERTY INFO
       }
-      else if ((option == "-PropertyInfo") || (option == "-PI")) {
-        if ((i + 1) >= argc) {
-          OpenSim::Object::PrintPropertyInfo(cout, "");
 
-        }
+      // Print property info
+      else if ((option == "-PropertyInfo") || (option == "-PI")) {
+        if ((i + 1) >= argc)
+          OpenSim::Object::PrintPropertyInfo(cout, "");
         else {
           char *compoundName = argv[i + 1];
-          if (compoundName[0] == '-') {
+          if (compoundName[0] == '-')
             OpenSim::Object::PrintPropertyInfo(cout, "");
-          }
-          else {
+          else
             OpenSim::Object::PrintPropertyInfo(cout, compoundName);
-          }
         }
         exit(EXIT_SUCCESS);
-
-        // Unrecognized
       }
+
+      // Unrecognized argument
       else {
         cout << "Unrecognized option " << option << " on command line... Ignored" << endl;
         PrintUsage(argv[0], cout);
@@ -123,35 +116,20 @@ int main(int argc, char **argv) {
     }
   }
 
+  // Create and run tool
   try {
-    // Construct model and read parameters file
+    // Read oSensorPlacer parameters and construct model
     OpenSim::ScaleExtendedTool* scaleTool = new OpenSim::ScaleExtendedTool(inName);
     OpenSim::Model* model = scaleTool->createModel();
 
     if (!model) throw OpenSim::Exception("oSensorPlacer: ERROR- No model specified.", __FILE__, __LINE__);
 
-    /*************/
-    // Proper model scaling section, not applicable without marker data
-    /*************/
-    //  // Realize the topology and initialize state
-    //  SimTK::State& s = model->initSystem();
-    //if (!subject->isDefaultModelScaler() && subject->getModelScaler().getApply())	{
-    //	OpenSim::ModelScaler& scaler = subject->getModelScaler();
-    //	if(!scaler.processModel(s, model, subject->getPathToSubject(), subject->getSubjectMass()))
-    //      exit(EXIT_SUCCESS);
-    //} else
-    //	cout << "Scaling parameters disabled (apply is false) or not set. Model is not scaled." << endl;
-
-    /*************/
-    // OSensor placer section
-    /*************/
-    // Realize the topology and initialize state
-    SimTK::State& news = model->initSystem();	// old state is messed up by scaling. can't use it
+    SimTK::State& state = model->initSystem();
 
     if (!scaleTool->isDefaultOrientationSensorPlacer()) {
       OpenSim::OrientationSensorPlacer& placer = scaleTool->getOrientationSensorPlacer();
 
-      if (!placer.processModel(news, model, scaleTool->getPathToSubject()))
+      if (!placer.processModel(state, model, scaleTool->getPathToSubject()))
         exit(EXIT_FAILURE);
     }
     else
@@ -159,9 +137,11 @@ int main(int argc, char **argv) {
 
     delete model;
     delete scaleTool;
+    exit(EXIT_SUCCESS);
   }
   catch (const OpenSim::Exception& x) {
     x.print(cout);
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -175,7 +155,7 @@ void PrintUsage(const char *aProgName, ostream &aOStream) {
   aOStream << "Option            Argument          Action / Notes\n";
   aOStream << "------            --------          --------------\n";
   aOStream << "-Help, -H                           Print the command-line options for " << progName << ".\n";
-  aOStream << "-PrintSetup, -PS                    Generates a template Setup file to customize scaling\n";
-  aOStream << "-Setup, -S        SetupFileName     Specify an xml setup file for scaling a generic model.\n";
+  aOStream << "-PrintSetup, -PS                    Generates a template Setup file to customize oSensor placing.\n";
+  aOStream << "-Setup, -S        SetupFileName     Specify an xml setup file for oSensors placing.\n";
   aOStream << "-PropertyInfo, -PI                  Print help information for properties in setup files.\n";
 }
