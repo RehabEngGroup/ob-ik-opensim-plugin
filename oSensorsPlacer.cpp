@@ -35,7 +35,7 @@
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Model.h>
-#include "OpenSim/Tools/ScaleExtendedTool.h"
+#include "OpenSim/Tools/OrientationSensorsPlacerTool.h"
 
 using namespace std;
 
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
   OpenSim::IO::SetDigitsPad(4);
 
   // Register types
-  OpenSim::ScaleExtendedTool::registerTypes();
+  OpenSim::OrientationSensorsPlacerTool::registerTypes();
 
   string inName;
   string option = "";
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
       // Print a default setup file
       else if ((option == "-PrintSetup") || (option == "-PS")) {
-        OpenSim::ScaleExtendedTool *subject = new OpenSim::ScaleExtendedTool();
+        OpenSim::OrientationSensorsPlacerTool *subject = new OpenSim::OrientationSensorsPlacerTool();
         subject->setName("default");
 
         // Add in useful objects that may need to be instantiated
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
   // Create and run tool
   try {
     // Read oSensorPlacer parameters and construct model
-    OpenSim::ScaleExtendedTool* scaleTool = new OpenSim::ScaleExtendedTool(inName);
+    OpenSim::OrientationSensorsPlacerTool* scaleTool = new OpenSim::OrientationSensorsPlacerTool(inName);
     OpenSim::Model* model = scaleTool->createModel();
 
     if (!model) throw OpenSim::Exception("oSensorPlacer: ERROR- No model specified.", __FILE__, __LINE__);

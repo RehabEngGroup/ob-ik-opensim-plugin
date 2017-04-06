@@ -1,5 +1,5 @@
-#ifndef __ScaleExtendedTool_h__
-#define __ScaleExtendedTool_h__
+#ifndef __OrientationSensorsPlacerTool_h__
+#define __OrientationSensorsPlacerTooll_h__
 /* -------------------------------------------------------------------------- *
  *                           OpenSim:  ScaleTool.h                            *
  * -------------------------------------------------------------------------- *
@@ -35,9 +35,7 @@
 #include <OpenSim/Common/Storage.h>
 #include <OpenSim/Simulation/Model/Model.h>
 #include <OpenSim/Tools/GenericModelMaker.h>
-#include <OpenSim/Tools/ModelScaler.h>
-#include <OpenSim/Tools/MarkerPlacer.h>
-#include "OrientationSensorPlacer.h"
+#include "OpenSim/Tools/OrientationSensorPlacer.h"
 namespace OpenSim {
 
   //=============================================================================
@@ -54,7 +52,7 @@ namespace OpenSim {
   //=============================================================================
   //=============================================================================
   /**
-    * ScaleExtendedTool.h
+    * OSensorsPlacer.h
     * The extended version of the original OpenSim ScaleTool to allow orientation
     * sensor orientations adjustments on body segments during a static trial
     *
@@ -63,12 +61,9 @@ namespace OpenSim {
     */
 
 
-  class OSIMEXTENDEDIK_API ScaleExtendedTool : public Object {
-    OpenSim_DECLARE_CONCRETE_OBJECT(ScaleExtendedTool, Object);
+class OSIMEXTENDEDIK_API OrientationSensorsPlacerTool : public Object {
+  OpenSim_DECLARE_CONCRETE_OBJECT(OrientationSensorsPlacerTool, Object);
 
-    //=============================================================================
-    // DATA
-    //=============================================================================
   protected:
     PropertyDbl _massProp;
     double &_mass;
@@ -85,12 +80,6 @@ namespace OpenSim {
     PropertyObj _genericModelMakerProp;
     GenericModelMaker &_genericModelMaker;
 
-    PropertyObj _modelScalerProp;
-    ModelScaler &_modelScaler;
-
-    PropertyObj _markerPlacerProp;
-    MarkerPlacer &_markerPlacer;
-
     PropertyObj _oSensorPlacerProp;
     OrientationSensorPlacer &_oSensorPlacer;
 
@@ -100,48 +89,26 @@ namespace OpenSim {
      */
     std::string	 _pathToSubject;
 
-  //=============================================================================
-  // METHODS
-  //=============================================================================
   public:
-    ScaleExtendedTool();
-    ScaleExtendedTool(const std::string &aFileName) SWIG_DECLARE_EXCEPTION;
-    ScaleExtendedTool(const ScaleExtendedTool &aSubject);
-    virtual ~ScaleExtendedTool();
+    OrientationSensorsPlacerTool();
+    OrientationSensorsPlacerTool(const std::string &aFileName) SWIG_DECLARE_EXCEPTION;
+    OrientationSensorsPlacerTool(const OrientationSensorsPlacerTool &aSubject);
+    virtual ~OrientationSensorsPlacerTool();
 
 #ifndef SWIG
-    ScaleExtendedTool& operator=(const ScaleExtendedTool &aSubject);
+    OrientationSensorsPlacerTool& operator=(const OrientationSensorsPlacerTool &aSubject);
 #endif
-    void copyData(const ScaleExtendedTool &aSubject);
+    void copyData(const OrientationSensorsPlacerTool &aSubject);
 
     Model* createModel();
     /* Query the subject for different parameters */
-    GenericModelMaker& getGenericModelMaker()
-    {
-      return _genericModelMaker;
-    }
+    GenericModelMaker& getGenericModelMaker() { return _genericModelMaker; }
 
-    ModelScaler& getModelScaler()
-    {
-      return _modelScaler;
-    }
-
-    MarkerPlacer& getMarkerPlacer()
-    {
-      return _markerPlacer;
-    }
-
-    OrientationSensorPlacer& getOrientationSensorPlacer()
-    {
-      return _oSensorPlacer;
-    }
+    OrientationSensorPlacer& getOrientationSensorPlacer() { return _oSensorPlacer; }
 
     bool isDefaultGenericModelMaker() { return _genericModelMakerProp.getValueIsDefault(); }
-    bool isDefaultModelScaler() { return _modelScalerProp.getValueIsDefault(); }
-    bool isDefaultMarkerPlacer() { return _markerPlacerProp.getValueIsDefault(); }
     bool isDefaultOrientationSensorPlacer() { return _oSensorPlacerProp.getValueIsDefault(); }
 
-    /* Register types to be used when reading a ScaleTool object from xml file. */
     static void registerTypes();
 
     /** Accessor methods to obtain model attributes */
@@ -151,37 +118,23 @@ namespace OpenSim {
     void setSubjectMass(double mass) { _mass = mass; }
     void setSubjectAge(double age) { _age = age; }
     void setSubjectHeight(double height) { _height = height; }
+
     /**
      * Accessor methods to set and get path to Subject. This is needed
      * since all file names referred to in the subject file are relative
      * to subject file
      */
-    const std::string& getPathToSubject()
-    {
-      return _pathToSubject;
-    }
-    void setPathToSubject(const std::string& aPath)
-    {
-      _pathToSubject = aPath;
-    }
-    //std::string getParentDirectory(const std::string& fileName);
+    const std::string& getPathToSubject() { return _pathToSubject; }
+    void setPathToSubject(const std::string& aPath) { _pathToSubject = aPath; }
 
-    void setPrintResultFiles(bool aToWrite) {
-      _modelScaler.setPrintResultFiles(aToWrite);
-      _markerPlacer.setPrintResultFiles(aToWrite);
-      _oSensorPlacer.setPrintResultFiles(aToWrite);
-    }
-
-  protected:
+    void setPrintResultFiles(bool aToWrite) { _oSensorPlacer.setPrintResultFiles(aToWrite); }
 
   private:
     void setNull();
     void setupProperties();
-  //=============================================================================
-  };	// END of class ScaleExtendedTool
-  //=============================================================================
-  //=============================================================================
+
+  };	// end of class OrientationSensorsPlacerTool
 
 } // end of namespace OpenSim
 
-#endif // __ScaleExtendedTool_h__
+#endif // __OrientationSensorsPlacerTool_h__
