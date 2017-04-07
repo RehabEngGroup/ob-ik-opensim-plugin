@@ -34,7 +34,6 @@
 #include <OpenSim/Common/PropertyDbl.h>
 #include <OpenSim/Common/Storage.h>
 #include <OpenSim/Simulation/Model/Model.h>
-#include <OpenSim/Tools/GenericModelMaker.h>
 #include "OpenSim/Tools/OrientationSensorPlacer.h"
 namespace OpenSim {
 
@@ -77,8 +76,11 @@ class OSIMEXTENDEDIK_API OrientationSensorsPlacerTool : public Object {
     PropertyStr _notesProp;
     std::string &_notes;
 
-    PropertyObj _genericModelMakerProp;
-    GenericModelMaker &_genericModelMaker;
+    PropertyStr _modelFileNameProp;
+    std::string &_modelFileName;
+
+    // PropertyStr _oSensorSetFileNameProp;
+    // std::string &_oSensorSetFileName;
 
     PropertyObj _oSensorPlacerProp;
     OrientationSensorPlacer &_oSensorPlacer;
@@ -101,12 +103,9 @@ class OSIMEXTENDEDIK_API OrientationSensorsPlacerTool : public Object {
     void copyData(const OrientationSensorsPlacerTool &aSubject);
 
     Model* createModel();
-    /* Query the subject for different parameters */
-    GenericModelMaker& getGenericModelMaker() { return _genericModelMaker; }
 
     OrientationSensorPlacer& getOrientationSensorPlacer() { return _oSensorPlacer; }
 
-    bool isDefaultGenericModelMaker() { return _genericModelMakerProp.getValueIsDefault(); }
     bool isDefaultOrientationSensorPlacer() { return _oSensorPlacerProp.getValueIsDefault(); }
 
     static void registerTypes();

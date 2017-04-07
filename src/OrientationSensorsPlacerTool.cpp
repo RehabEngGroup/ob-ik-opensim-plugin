@@ -62,8 +62,8 @@ OrientationSensorsPlacerTool::OrientationSensorsPlacerTool() :
   _height(_heightProp.getValueDbl()),
   _age(_ageProp.getValueDbl()),
   _notes(_notesProp.getValueStr()),
-  _genericModelMakerProp(PropertyObj("", GenericModelMaker())),
-  _genericModelMaker((GenericModelMaker&)_genericModelMakerProp.getValueObj()),
+  _modelFileName(_modelFileNameProp.getValueStr()),
+  //_oSensorSetFileName(_oSensorSetFileNameProp.getValueStr()),
   _oSensorPlacerProp(PropertyObj("", OrientationSensorPlacer())),
   _oSensorPlacer((OrientationSensorPlacer&)_oSensorPlacerProp.getValueObj())
 {
@@ -81,8 +81,8 @@ OrientationSensorsPlacerTool::OrientationSensorsPlacerTool(const string &aFileNa
   _height(_heightProp.getValueDbl()),
   _age(_ageProp.getValueDbl()),
   _notes(_notesProp.getValueStr()),
-  _genericModelMakerProp(PropertyObj("", GenericModelMaker())),
-  _genericModelMaker((GenericModelMaker&)_genericModelMakerProp.getValueObj()),
+  _modelFileName(_modelFileNameProp.getValueStr()),
+  //_oSensorSetFileName(_oSensorSetFileNameProp.getValueStr()),
   _oSensorPlacerProp(PropertyObj("", OrientationSensorPlacer())),
   _oSensorPlacer((OrientationSensorPlacer&)_oSensorPlacerProp.getValueObj())
 {
@@ -114,8 +114,8 @@ OrientationSensorsPlacerTool::OrientationSensorsPlacerTool(const OrientationSens
   _height(_heightProp.getValueDbl()),
   _age(_ageProp.getValueDbl()),
   _notes(_notesProp.getValueStr()),
-  _genericModelMakerProp(PropertyObj("", GenericModelMaker())),
-  _genericModelMaker((GenericModelMaker&)_genericModelMakerProp.getValueObj()),
+  _modelFileName(_modelFileNameProp.getValueStr()),
+  //_oSensorSetFileName(_oSensorSetFileNameProp.getValueStr()),
   _oSensorPlacerProp(PropertyObj("", OrientationSensorPlacer())),
   _oSensorPlacer((OrientationSensorPlacer&)_oSensorPlacerProp.getValueObj())
 {
@@ -139,7 +139,8 @@ void OrientationSensorsPlacerTool::copyData(const OrientationSensorsPlacerTool &
   _height = aSubject._height;
   _age = aSubject._age;
   _notes = aSubject._notes;
-  _genericModelMaker = aSubject._genericModelMaker;
+  _modelFileName = aSubject._modelFileName;
+  //_oSensorSetFileName = aSubject._oSensorSetFileName;
   _oSensorPlacer = aSubject._oSensorPlacer;
 }
 
@@ -176,10 +177,16 @@ void OrientationSensorsPlacerTool::setupProperties()
   _notesProp.setName("notes");
   _propertySet.append(&_notesProp);
 
-  // TODO: overload the genericModelMaker to enable defining oSensors set input xml and removing marker set
-  _genericModelMakerProp.setComment("Specifies the name of the input model (.osim) and the marker set.");
-  _genericModelMakerProp.setName("GenericModelMaker");
-  _propertySet.append(&_genericModelMakerProp);
+  _modelFileNameProp.setComment("Model file (.osim) for the subject.");
+  _modelFileNameProp.setName("model_file");
+  _propertySet.append(&_modelFileNameProp);
+
+  // TODO: Check if make sense, and if so add this property
+  // TODO: Requires to fix the constructor from xml file
+
+  //_oSensorSetFileNameProp.setComment("Set of oSensors (.xml) to be used.");
+  //_oSensorSetFileNameProp.setName("oSensor_set_file");
+  //_propertySet.append(&_oSensorSetFileNameProp);
 
   _oSensorPlacerProp.setComment("Specifies parameters for orienting oSensor on the model.");
   _oSensorPlacerProp.setName("OrientationSensorPlacer");
@@ -192,10 +199,8 @@ void OrientationSensorsPlacerTool::setupProperties()
  */
 void OrientationSensorsPlacerTool::registerTypes()
 {
-  Object::registerType(GenericModelMaker());
   Object::registerType(OrientationSensorPlacer());
   Object::registerType(OrientationSensor());
-  GenericModelMaker::registerTypes();
 }
 
 //=============================================================================
@@ -227,26 +232,33 @@ OrientationSensorsPlacerTool& OrientationSensorsPlacerTool::operator=(const Orie
  * @return Pointer to the Model that is created.
  */
 Model* OrientationSensorsPlacerTool::createModel() {
-  /* Make the generic model. */
-  if (!_genericModelMakerProp.getValueIsDefault()){
-    Model *model = _genericModelMaker.processModel(_pathToSubject);
-    if (!model) {
+
+  Model* model = NULL;
+
+  cout << endl << "Step 1: Loading model" << endl;
+
+  try
+  {
+		_modelFileName = _pathToSubject + _modelFileName;
+
+		model = new Model(_modelFileName);
+		model->initSystem();
+  }
+  catch (const Exception& x) {
+		x.print(cout);
+  }
+
+  if (!model) {
       cout << "===ERROR===: Unable to load generic model." << endl;
       return 0;
     }
-    else {
-      std::string newModelName = model->getName()+ " ";
-      if(getName() == "default")
-        newModelName += "Placer";
-      else
-        newModelName += getName();
-      model->setName(newModelName);
-      return model;
-    }
-  }
   else {
-    cout << "OrientationSensorsPlacerTool.createModel: WARNING- Unscaled model not specified (" << _genericModelMakerProp.getName();
-    cout << " section missing from setup file)." << endl;
+    std::string newModelName = model->getName()+ " ";
+    if(getName() == "default")
+      newModelName += "Placer";
+    else
+      newModelName += getName();
+    model->setName(newModelName);
+    return model;
   }
-  return 0;
 }
