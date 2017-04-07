@@ -1,17 +1,11 @@
 #include <OpenSim/OpenSim.h>
-#include "OpenSim/Tools/InverseKinematicsExtendedTool.h"
-#include "OpenSim/Tools/IKExtendedTaskSet.h"
-#include "OpenSim/Simulation/Model/OrientationSensor.h"
 #include "OpenSim/Simulation/Model/OrientationSensorSet.h"
 #include "OpenSim/Simulation/Model/Model.h"
 #include "OpenSim/Simulation/Model/ComponentSet.h"
 
 int main(int argc, char* argv[]) {
 
-  OpenSim::Object::registerType(OpenSim::OrientationSensor());
-  OpenSim::Object::registerType(OpenSim::IKExtendedTaskSet());
-  OpenSim::Object::registerType(OpenSim::IKOrientationSensorTask());
-  OpenSim::Object::registerType(OpenSim::InverseKinematicsExtendedTool());
+  OpenSim::OrientationSensor::registerTypes();
 
   if (argc < 2) {
     std::cout << "Please provide a model" << std::endl;
@@ -23,10 +17,11 @@ int main(int argc, char* argv[]) {
   std::cout << "Loaded model " << model.getName() << std::endl;
   OpenSim::ComponentSet &modelComponentSet = model.updMiscModelComponentSet();
   OpenSim::OrientationSensorSet modelOSensorSet;
-  std::cout << modelComponentSet.getSize() << std::endl;
+  std::cout << modelComponentSet.getName() << std::endl;
   for (int i = 0; i < modelComponentSet.getSize(); ++i) {
     OpenSim::OrientationSensor* oSens = dynamic_cast<OpenSim::OrientationSensor*>(&modelComponentSet.get(i));
     if (oSens) {
+      modelOSensorSet.cloneAndAppend(*oSens);
       std::string nameSens = oSens->getName();
       oSens->connectToModel(model);
       std::string nameBody = oSens->getBody().getName();
@@ -35,6 +30,7 @@ int main(int argc, char* argv[]) {
     else
       std::cout << "Not an osensor" << std::endl;
   }
-
+    modelOSensorSet.setName("OrientationSensorSet_from_model_"+model.getName());
+    modelOSensorSet.print("oSensorSet.xml");
   return 0;
 }
