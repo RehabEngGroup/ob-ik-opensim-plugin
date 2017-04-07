@@ -1,9 +1,27 @@
+/* -------------------------------------------------------------------------- *
+ *        Orientation Based Inverse Kinematics : OrientationSensor.h          *
+ * -------------------------------------------------------------------------- *
+ * Copyright (c) 2016-2017 L. Tagliapietra, E. Ceseracciu, M. Reggiani        *
+ *                                                                            *
+ * Author(s): L. Tagliapietra, E. Ceseracciu (Mar 2016)                       *
+ *                                                                            *
+ * Contact(s): tagliapietra.work@gmail.com                                    *
+ *                                                                            *
+ * Licensed under the Apache License, Version 2.0 (the "License");            *
+ * you may not use this file except in compliance with the License.           *
+ * You may obtain a copy of the License at:                                   *
+ * http://www.apache.org/licenses/LICENSE-2.0                                 *
+ *                                                                            *
+ * Unless required by applicable law or agreed to in writing, software        *
+ * distributed under the License is distributed on an "AS IS" BASIS,          *
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *
+ * See the License for the specific language governing permissions and        *
+ * limitations under the License.                                             *
+ * -------------------------------------------------------------------------- */
+
 #ifndef OPENSIM_ORIENTATIONSENSOR_H_
 #define OPENSIM_ORIENTATIONSENSOR_H_
 
-
-
-// INCLUDE
 #include <iostream>
 #include <math.h>
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
@@ -19,15 +37,6 @@ namespace OpenSim {
     class Model;
     class VisibleObject;
 
-
-    //=============================================================================
-    //=============================================================================
-    /**
-    * A class implementing an OrientationSensor.
-    *
-    * @author Peter Loan
-    * @version 1.0
-    */
     class OSIMEXTENDEDIK_API OrientationSensor : public ModelComponent {
         OpenSim_DECLARE_CONCRETE_OBJECT(OrientationSensor, ModelComponent);
         OpenSim_DECLARE_PROPERTY(fixed, bool,

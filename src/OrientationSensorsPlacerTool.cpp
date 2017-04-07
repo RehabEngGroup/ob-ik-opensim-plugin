@@ -1,18 +1,16 @@
 /* -------------------------------------------------------------------------- *
- *                            ScaleExtendedTool.cpp                           *
+ *   Orientation Based Inverse Kinematics: OrientationSensorsPlacerTool.cpp   *
  * -------------------------------------------------------------------------- *
- * The OpenSim API is a toolkit for musculoskeletal modeling and simulation.  *
- * See http://opensim.stanford.edu and the NOTICE file for more information.  *
- * OpenSim is developed at Stanford University and supported by the US        *
- * National Institutes of Health (U54 GM072970, R24 HD065690) and by DARPA    *
- * through the Warrior Web program.                                           *
+ * Copyright (c) 2016-2017 L. Tagliapietra, E. Ceseracciu, M. Reggiani        *
  *                                                                            *
- * Copyright (c) 2005-2012 Stanford University and the Authors                *
- * Author(s): Peter Loan                                                      *
+ * Author(s): L. Tagliapietra, E. Ceseracciu (Dec 2016)                       *
  *                                                                            *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may    *
- * not use this file except in compliance with the License. You may obtain a  *
- * copy of the License at http://www.apache.org/licenses/LICENSE-2.0.         *
+ * Contact(s): tagliapietra.work@gmail.com                                    *
+ *                                                                            *
+ * Licensed under the Apache License, Version 2.0 (the "License");            *
+ * you may not use this file except in compliance with the License.           *
+ * You may obtain a copy of the License at:                                   *
+ * http://www.apache.org/licenses/LICENSE-2.0                                 *
  *                                                                            *
  * Unless required by applicable law or agreed to in writing, software        *
  * distributed under the License is distributed on an "AS IS" BASIS,          *
@@ -21,20 +19,9 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
- //=============================================================================
- //=============================================================================
- /**
-  * ScaleExtendedTool.cpp
-  * The extended version of the original OpenSim ScaleTool class to allow orientation
-  * sensor orientations adjustments on body segments during a static trial
-  *
-  * @author: Luca Tagliapietra <tagliapietra@gest.unipd.it>
-  * @notes: beginning date Dec 2016
-  */
-
-  //=============================================================================
-  // INCLUDES
-  //=============================================================================
+//=============================================================================
+// INCLUDES
+//=============================================================================
 #include "OpenSim/Tools/OrientationSensorsPlacerTool.h"
 #include "OpenSim/Simulation/Model/OrientationSensorSet.h"
 #include "OpenSim/Simulation/Model/OrientationSensor.h"
