@@ -43,24 +43,10 @@ namespace OpenSim {
 class Model;
 class IKExtendedTaskSet;
 class Storage;
-//=============================================================================
-//=============================================================================
-/**
- * A Tool that performs an Inverse Kinematics analysis with a given model.
- * Inverse kinematics is the solution of internal coordinates that poses
- * the model such that the landmark locations (markers), affixed to the model,
- * minimize the weighted least-squares error with observations of markers
- * in spatial coordinates. Observations of coordinates can also be included.
- *
- * @author Ajay Seth
- * @version 1.0
- */
+
 class OSIMEXTENDEDIK_API InverseKinematicsExtendedTool : public Tool{
 OpenSim_DECLARE_CONCRETE_OBJECT(InverseKinematicsExtendedTool, Tool);
 
-//=============================================================================
-// MEMBER VARIABLES
-//=============================================================================
 private:
 
     /** Pointer to the model being investigated. */
@@ -112,12 +98,6 @@ private:
     PropertyBool _reportMarkerLocationsProp;
     bool &_reportMarkerLocations;
 
-//=============================================================================
-// METHODS
-//=============================================================================
-    //--------------------------------------------------------------------------
-    // CONSTRUCTION
-    //--------------------------------------------------------------------------
 public:
     virtual ~InverseKinematicsExtendedTool();
     InverseKinematicsExtendedTool();
@@ -158,33 +138,22 @@ private:
     bool hasOSensorFile_ = false;
     bool useVisualizer_ = false;
 
-    //--------------------------------------------------------------------------
-    // OPERATORS
-    //--------------------------------------------------------------------------
 public:
 #ifndef SWIG
     InverseKinematicsExtendedTool&
         operator=(const InverseKinematicsExtendedTool &aInverseKinematicsTool);
 #endif
 
-    //--------------------------------------------------------------------------
-    // GET AND SET
-    //--------------------------------------------------------------------------
     void setOutputMotionFileName(const std::string aOutputMotionFileName) {
         _outputMotionFileName = aOutputMotionFileName;
     }
     std::string getOutputMotionFileName() { return _outputMotionFileName;}
     IKExtendedTaskSet& getIKTaskSet() { return _ikExtendedTaskSet; }
 
-    //--------------------------------------------------------------------------
-    // INTERFACE
-    //--------------------------------------------------------------------------
     bool run() override SWIG_DECLARE_EXCEPTION;
 
-
-//=============================================================================
 };  // END of class InverseKinematicsExtendedTool
-//=============================================================================
+
 } // namespace
 
 #endif // __InverseKinematicsExtendedTool_h__

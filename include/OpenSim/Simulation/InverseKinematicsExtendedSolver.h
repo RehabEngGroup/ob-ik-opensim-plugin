@@ -32,42 +32,9 @@ class CoordinateReference;
 class MarkersReference;
 class OrientationSensorsReference;
 
-//=============================================================================
-//=============================================================================
-/**
- * Solve for the coordinates (degrees-of-freedom) of the model that satisfy the
- * set of constraints imposed on the model as well as set of desired coordinate
- * values.  The InverseKinematics provides the option to convert the problem to
- * an approximate one where the constraint violations are treated as penalties
- * to be minimized rather than strictly enforced. This can speedup the solution
- * time and can be used to seed the constrained problem closer to the solution.
- *
- * The InverseKinematics objective:
- * \f[
- *   min: J = sum(Wm_i*(m_i-md_i)^T*(m_i-md_i)) + sum(Wq_j*(q_j-qd_j)^2)) +
- *            [Wc*sum(c_{err})^2]
- * \f]
- * where m_i and md_i are the model and desired marker locations (Vec3); q_j
- * and qd_j are model and desired joint coordinates. Wm_i and Wq_j are the
- * marker and coordinate weightings, respectively, and Wc is the weighting on
- * constraint errors. When Wc == Infinity, the second term is not included,
- * but instead q is subject to the constraint equations:
- *      \f[ c_{err} = G(q)-Go = 0 \f]
- *
- * When the model (and the number of goals) is guaranteed not to change and
- * the initial state is close to the InverseKinematics solution (i.e. from the
- * initial assemble()), then track() is an efficient method for updating the
- * configuration to determine the small change in coordinate values, q.
- *
- * See SimTK::Assembler for more algorithmic details of the underlying solver.
- *
- * @author Ajay Seth
- */
 class OSIMEXTENDEDIK_API InverseKinematicsExtendedSolver : public AssemblySolver
 {
-//=============================================================================
-// MEMBER VARIABLES
-//=============================================================================
+
 protected:
 
     // The marker reference values and weightings
@@ -82,14 +49,7 @@ protected:
     // OSensors collectively form a single assembly condition for the SimTK::Assembler
     SimTK::OrientationSensors *_orientationSensorAssemblyCondition;
 
-
-//=============================================================================
-// METHODS
-//=============================================================================
 public:
-    //--------------------------------------------------------------------------
-    // CONSTRUCTION
-    //--------------------------------------------------------------------------
     virtual ~InverseKinematicsExtendedSolver() {}
 
     InverseKinematicsExtendedSolver(const Model &model,
@@ -107,19 +67,6 @@ public:
                             OrientationSensorsReference &oSensorsReference,
                             SimTK::Array_<CoordinateReference> &coordinateReferences,
                             double constraintWeight = SimTK::Infinity);
-
-    /** Assemble a model configuration that meets the InverseKinematics conditions
-        (desired values and constraints) starting from an initial state that
-        does not have to satisfy the constraints. */
-    //virtual void assemble(SimTK::State &s);
-
-    /** Obtain a model configuration that meets the InverseKinematics conditions
-        (desired values and constraints) given a state that satisfies or
-        is close to satisfying the constraints. Note there can be no change
-        in the number of constraints or desired coordinates. Desired
-        coordinate values can and should be updated between repeated calls
-        to track a desired trajectory of coordinate values. */
-    //virtual void track(SimTK::State &s);
 
     /** Change the weighting of a marker to take affect when assemble or track is called next.
         Update a marker's weight by name. */
@@ -205,9 +152,8 @@ private:
     void setupMarkerGoals(SimTK::State &s);
     void setupOSensorGoals(SimTK::State &s);
 
-//=============================================================================
 };  // END of class InverseKinematicsExtendedSolver
-//=============================================================================
+
 } // namespace
 
 #endif // OPENSIM_INVERSE_KINEMATICS_EXTENDED_SOLVER_H_

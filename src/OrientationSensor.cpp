@@ -19,25 +19,17 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-//=============================================================================
-// INCLUDES
-//=============================================================================
 #include "OpenSim/Simulation/Model/OrientationSensor.h"
 #include <OpenSim/Simulation/Model/Model.h>
 #include <OpenSim/Simulation/Model/BodySet.h>
 
-//=============================================================================
-// STATICS
-//=============================================================================
 using namespace std;
 using namespace OpenSim;
 using SimTK::Vec3;
 
 // TODO: Fix visualization functions and variables
 Geometry *OrientationSensor::_defaultGeometry = new AnalyticEllipsoid(0.04, 0.02, 0.01);
-//=============================================================================
-// CONSTRUCTOR(S) AND DESTRUCTOR
-//=============================================================================
+
 //_____________________________________________________________________________
 /**
 * Default constructor.
@@ -77,9 +69,6 @@ ModelComponent(aOSensor)
     _displayer.setOwner(this);
 }
 
-//=============================================================================
-// CONSTRUCTION METHODS
-//=============================================================================
 //_____________________________________________________________________________
 /**
 * Copy data members from one oSensor to another.
@@ -184,9 +173,6 @@ void OrientationSensor::removeSelfFromDisplay()
         }
     }
 }
-//=============================================================================
-// OPERATORS
-//=============================================================================
 //_____________________________________________________________________________
 /**
 * Assignment operator.
@@ -203,16 +189,13 @@ OrientationSensor& OrientationSensor::operator=(const OrientationSensor &aMarker
     return(*this);
 }
 
-//=============================================================================
-// UTILITY
-//=============================================================================
 //_____________________________________________________________________________
 /**
-* Update an existing marker with parameter values from a
+* Update an existing oSensor with parameter values from a
 * new one, but only for the parameters that were explicitly
 * specified in the XML node.
 *
-* @param aMarker marker to update from
+* @param aOSensor oSensor to update from
 */
 void OrientationSensor::updateFromOSensor(const OrientationSensor &aOSensor)
 {
@@ -241,7 +224,7 @@ void OrientationSensor::updateFromOSensor(const OrientationSensor &aOSensor)
 
 //_____________________________________________________________________________
 /**
-* Change the body that this marker is attached to. It assumes that the body is
+* Change the body that this oSensor is attached to. It assumes that the body is
 * already set, so that connectMarkerToModel() needs to be called to update
 * dependent information.
 *
@@ -259,8 +242,8 @@ void OrientationSensor::changeBody(OpenSim::Body& aBody)
 
 //_____________________________________________________________________________
 /**
-* Change the body that this marker is attached to. It assumes that the body is
-* already set, so that connectMarkerToModel() needs to be called to update
+* Change the body that this oSensor is attached to. It assumes that the body is
+* already set, so that connectToModel() needs to be called to update
 * dependent information.
 *
 * @param s State.
@@ -283,12 +266,9 @@ void OrientationSensor::changeBodyPreserveLocation(const SimTK::State& s, OpenSi
     connectToModel(aBody.updModel());
 }
 
-//=============================================================================
-// SCALING
-//=============================================================================
 //_____________________________________________________________________________
 /**
-* Scale the marker.
+* Scale the oSensor.
 *
 * @param aScaleFactors XYZ scale factors.
 */

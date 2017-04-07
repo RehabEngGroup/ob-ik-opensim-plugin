@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef OPENSIM_ORIENTATIONSENSOR_H_
-#define OPENSIM_ORIENTATIONSENSOR_H_
+#ifndef _OrientationSensor_h
+#define _OrientationSensor_h
 
 #include <iostream>
 #include <math.h>
@@ -51,9 +51,6 @@ namespace OpenSim {
 
         class Body;
 
-        //=============================================================================
-        // DATA
-        //=============================================================================
     private:
 
     protected:
@@ -69,12 +66,6 @@ namespace OpenSim {
         static Geometry *_defaultGeometry;
         bool _virtual;
 
-        //=============================================================================
-        // METHODS
-        //=============================================================================
-        //--------------------------------------------------------------------------
-        // CONSTRUCTION
-        //--------------------------------------------------------------------------
     public:
         OrientationSensor();
         OrientationSensor(const OrientationSensor &aOSensor);
@@ -117,14 +108,12 @@ namespace OpenSim {
     private:
         void setNull();
         void constructProperties();
-        //=============================================================================
+
     };	// END of class OrientationSensor
-    //=============================================================================
-    //=============================================================================
 
 } // end of namespace OpenSim
 
 
-#endif // OPENSIM_ORIENTATIONSENSOR_H_
+#endif // __OrientationSensor_h__
 
 

@@ -71,26 +71,10 @@ public:
 }; // end of OrientationSensorWeight class
 
 
-//=============================================================================
-//=============================================================================
-/**
- * Reference values to be achieved for specified OSensor that will be used
- * via optimization and/or tracking. Also contains a weighting that identifies
- * the relative importance of achieving one OSensor's reference relative to
- * another.
- *
- * @author Ajay Seth
- * @version 1.0
- */
 class IKTaskSet;
 
 class OSIMEXTENDEDIK_API OrientationSensorsReference : public Reference_<SimTK::Quaternion> {
 OpenSim_DECLARE_CONCRETE_OBJECT(OrientationSensorsReference, Reference_<SimTK::Quaternion>);
-
-
-//=============================================================================
-// MEMBER VARIABLES
-//=============================================================================
 
 protected:
 
@@ -104,9 +88,6 @@ private:
     // corresponding list of weights guaranteed to be in the same order as names above
     SimTK::Array_<double> _weights;
 
-//=============================================================================
-// METHODS
-//=============================================================================
 public:
     OpenSim_DECLARE_PROPERTY(osensors_file, std::string,
         "MOT/STO file containing the time history of observations of sensor orientations.");
@@ -114,27 +95,20 @@ public:
         "Set of sensor weights identified by sensor name with weight being a positive scalar.");
     OpenSim_DECLARE_PROPERTY(default_weight, double,
         "");
-    //--------------------------------------------------------------------------
-    // CONSTRUCTION
-    //--------------------------------------------------------------------------
     OrientationSensorsReference();
 
-    // Convenience load markers from a file
+    // Convenience load oSensors from a file
 		OrientationSensorsReference(const std::string filename);
 
 		OrientationSensorsReference(OrientationSensorData& aOrientationSensorData, const Set<OrientationSensorWeight>* aOrientationSensorWeightSet = NULL);
 
-	//	OrientationSensorsReference& operator=(const OrientationSensorsReference &aRef) { Reference_<SimTK::Vec3>::operator=(aRef); copyData(aRef); return(*this); };
+  	//	OrientationSensorsReference& operator=(const OrientationSensorsReference &aRef) { Reference_<SimTK::Vec3>::operator=(aRef); copyData(aRef); return(*this); };
 
 		virtual ~OrientationSensorsReference() {}
 
     /** load the orientation sensors data for this OrientationSensorsReference from OrientationSensorsFile  */
     void loadOrientationSensorsFile(const std::string orientationSensorsFile);
 
-
-    //--------------------------------------------------------------------------
-    // Reference Interface
-    //--------------------------------------------------------------------------
 		int getNumRefs() const override { return _orientationSensorData->getNumOrientationSensors(); }
     /** get the time range for which the OrientationSensorsReference values are valid,
         based on the loaded marker data.*/
@@ -150,9 +124,6 @@ public:
     /** get the weighting (importance) of meeting this OrientationSensorsReference in the same order as names*/
     void getWeights(const SimTK::State &s, SimTK::Array_<double> &weights) const override;
 
-    //--------------------------------------------------------------------------
-    // Convenience Access
-    //--------------------------------------------------------------------------
     double getSamplingFrequency() {return _orientationSensorData->getDataRate(); }
     Set<OrientationSensorWeight> getOrientationSensorWeightSet();
     void setOrientationSensorWeightSet(const Set<OrientationSensorWeight> &orientationSensorWeights);
@@ -165,9 +136,8 @@ private:
 
     void populateFromOrientationSensorData(OrientationSensorData& aOrientationSensorData);
 
-//=============================================================================
 };  // END of class OrientationSensorsReference
-//=============================================================================
+
 } // namespace
 
 #endif // __OrientationSensorsReference_h__

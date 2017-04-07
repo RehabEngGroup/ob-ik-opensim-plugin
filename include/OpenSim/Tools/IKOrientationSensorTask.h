@@ -27,13 +27,6 @@
 
 namespace OpenSim {
 
-//=============================================================================
-//=============================================================================
-/**
- * @authors Eran Guendelman
- * @version 1.0
- */
-
 class OSIMEXTENDEDIK_API IKOrientationSensorTask : public IKTask {
     OpenSim_DECLARE_CONCRETE_OBJECT(IKOrientationSensorTask, IKTask);
 
@@ -45,10 +38,8 @@ public:
     IKOrientationSensorTask& operator=(const IKOrientationSensorTask &aIKOrientationSensorTask);
 #endif
 
-//=============================================================================
+
 };  // END of class IKOrientationSensorTask
-//=============================================================================
-//=============================================================================
 
 } // end of namespace OpenSim
 

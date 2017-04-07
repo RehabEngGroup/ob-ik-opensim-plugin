@@ -53,10 +53,8 @@ public:
 #ifndef SWIG
     IKExtendedTaskSet& operator=(const IKExtendedTaskSet &aIKExtendedTaskSet) { IKTaskSet::operator=(aIKExtendedTaskSet); return *this; }
 #endif
-//=============================================================================
+
 };  // END of class IKExtendedTaskSet
-//=============================================================================
-//=============================================================================
 
 } // end of namespace OpenSim
 

@@ -31,20 +31,9 @@
 
 namespace OpenSim {
 
-//=============================================================================
-//=============================================================================
-/**
- * A class implementing a frame of orientation sensor data from a MOT/STO file.
- *
- * @author Peter Loan
- * @version 1.0
- */
 class OSIMEXTENDEDIK_API OrientationSensorFrame : public Object {
 OpenSim_DECLARE_CONCRETE_OBJECT(OrientationSensorFrame, Object);
 
-//=============================================================================
-// DATA
-//=============================================================================
 private:
     int _numOrientationSensors;
     int _frameNumber;
@@ -52,12 +41,6 @@ private:
     Units _units;
     SimTK::Array_<SimTK::Quaternion> _orientationSensors;
 
-//=============================================================================
-// METHODS
-//=============================================================================
-    //--------------------------------------------------------------------------
-    // CONSTRUCTION
-    //--------------------------------------------------------------------------
 public:
     OrientationSensorFrame();
     OrientationSensorFrame(int aNumOrientationSensors, int aFrameNumber, double aTime, Units& aUnits);
@@ -77,10 +60,7 @@ public:
 private:
     void setNull();
 
-//=============================================================================
 };  // END of class OrientationSensorFrame
-//=============================================================================
-//=============================================================================
 
 } // end of namespace OpenSim
 

@@ -19,9 +19,6 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-//=============================================================================
-// INCLUDES
-//=============================================================================
 #include "OpenSim/Tools/OrientationSensorsPlacerTool.h"
 #include "OpenSim/Simulation/Model/OrientationSensorSet.h"
 #include "OpenSim/Simulation/Model/OrientationSensor.h"
@@ -31,15 +28,9 @@
 #include <OpenSim/Simulation/Model/Model.h>
 #include "SimTKsimbody.h"
 
-//=============================================================================
-// STATICS
-//=============================================================================
 using namespace std;
 using namespace OpenSim;
 
-//=============================================================================
-// CONSTRUCTOR(S) AND DESTRUCTOR
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Default constructor.
@@ -111,9 +102,6 @@ OrientationSensorsPlacerTool::OrientationSensorsPlacerTool(const OrientationSens
   copyData(aSubject);
 }
 
-//=============================================================================
-// CONSTRUCTION METHODS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Copy data members from one ScaleTool to another.
@@ -190,9 +178,6 @@ void OrientationSensorsPlacerTool::registerTypes()
   Object::registerType(OrientationSensor());
 }
 
-//=============================================================================
-// OPERATORS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Assignment operator.
@@ -209,12 +194,9 @@ OrientationSensorsPlacerTool& OrientationSensorsPlacerTool::operator=(const Orie
   return(*this);
 }
 
-//=============================================================================
-// UTILITY
-//=============================================================================
 //_____________________________________________________________________________
 /**
- * Create a generic model, using GenericModelMaker::processModel().
+ * Load a model
  *
  * @return Pointer to the Model that is created.
  */

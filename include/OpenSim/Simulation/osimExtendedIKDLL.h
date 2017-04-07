@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef OSIMEXTENDEDIK_DLL_H_
-#define OSIMEXTENDEDIK_DLL_H_
+#ifndef __osimExtendedIK_DLL_h__
+#define __osimExtendedIK_DLL_h__
 
 
 // UNIX PLATFORM
@@ -43,4 +43,4 @@
 #endif // PLATFORM
 
 
-#endif // OSIMEXTENDEDIK_DLL_H_
+#endif // __osimExtendedIK_DLL_h__

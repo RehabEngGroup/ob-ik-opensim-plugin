@@ -19,9 +19,6 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
- //=============================================================================
- // INCLUDES
- //=============================================================================
 #include "OpenSim/Tools/OrientationSensorPlacer.h"
 #include "OpenSim/Common/OrientationSensorData.h"
 #include <OpenSim/Common/Storage.h>
@@ -37,15 +34,11 @@
 #include <OpenSim/Tools/IKCoordinateTask.h>
 #include <OpenSim/Analyses/StatesReporter.h>
 #include "OpenSim/Simulation/Model/ComponentSet.h"
-//=============================================================================
-// STATICS
-//=============================================================================
+
 using namespace std;
 using namespace OpenSim;
 using SimTK::Vec3;
-//=============================================================================
-// CONSTRUCTOR(S) AND DESTRUCTOR
-//=============================================================================
+
 //_____________________________________________________________________________
 /**
  * Default constructor.
@@ -99,9 +92,6 @@ OrientationSensorPlacer::OrientationSensorPlacer(const OrientationSensorPlacer &
   copyData(anOrientationSensorPlacer);
 }
 
-//=============================================================================
-// CONSTRUCTION METHODS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Copy data members from one OrientationSensorPlacer to another.
@@ -197,9 +187,6 @@ void OrientationSensorPlacer::setupProperties()
   _propertySet.append(&_maxOSensorMovementProp);
 }
 
-//=============================================================================
-// OPERATORS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Assignment operator.
@@ -216,18 +203,9 @@ OrientationSensorPlacer& OrientationSensorPlacer::operator=(const OrientationSen
   return(*this);
 }
 
-//=============================================================================
-// UTILITY
-//=============================================================================
 //_____________________________________________________________________________
 /**
- * This method creates a SimmMotionTrial instance with the markerFile and
- * timeRange parameters. It also creates a Storage instance with the
- * coordinateFile parameter. Then it updates the coordinates and oSensors in
- * the model, if specified. Then it does IK to fit the model to the static
- * pose. Then it uses the current model pose to relocate all non-fixed oSensors
- * according to their orientation in the SimmMotionTrial. Then it writes the
- * output files selected by the user.
+ * This method implements the oSensors placing routine
  *
  * @param aModel the model to use for the marker placing process.
  * @return Whether the oSensor orienting process was successful or not.

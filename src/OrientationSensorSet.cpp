@@ -27,9 +27,6 @@ using namespace std;
 using namespace OpenSim;
 using SimTK::Vec3;
 
-//=============================================================================
-// DESTRUCTOR AND CONSTRUCTORS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Destructor.
@@ -71,9 +68,6 @@ ModelComponentSet<OrientationSensor>(aOrientationSensorSet)
     *this = aOrientationSensorSet;
 }
 
-//=============================================================================
-// CONSTRUCTION METHODS
-//=============================================================================
 /**
  * Set the data members of this OrientationSensorSet to their null values.
  */
@@ -81,9 +75,6 @@ void OrientationSensorSet::setNull()
 {
 }
 
-//=============================================================================
-// OPERATORS
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Assignment operator.
@@ -98,9 +89,6 @@ OrientationSensorSet& OrientationSensorSet::operator=(const OrientationSensorSet
 }
 #endif
 
-//=============================================================================
-// UTILITY
-//=============================================================================
 //_____________________________________________________________________________
 /**
  * Get names of Orientation Sensors in the OrientationSensor set
@@ -116,7 +104,6 @@ void OrientationSensorSet::getOSensorNames(Array<string>& aOSensorNamesArray)
 
 //_____________________________________________________________________________
 /**
- * Scale marker set by a set of scale factors
  // TODO: check if make sense to scale the orientation sensor location
  */
 void OrientationSensorSet::scale(const ScaleSet& scaleSet)

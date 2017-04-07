@@ -20,7 +20,7 @@
  * -------------------------------------------------------------------------- */
 
 #ifndef __OrientationSensorsPlacerTool_h__
-#define __OrientationSensorsPlacerTooll_h__
+#define __OrientationSensorsPlacerTool_h__
 
 #include <iostream>
 #include <math.h>

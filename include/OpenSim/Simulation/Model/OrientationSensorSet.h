@@ -50,26 +50,17 @@ public:
     OrientationSensorSet(const OrientationSensorSet& aOSensorSet);
     ~OrientationSensorSet(void);
 
-    //--------------------------------------------------------------------------
-    // OPERATORS
-    //--------------------------------------------------------------------------
 #ifndef SWIG
     OrientationSensorSet& operator=(const OrientationSensorSet &aOSensorSet);
 #endif
 
-    //--------------------------------------------------------------------------
-    // UTILITIES
-    //--------------------------------------------------------------------------
     void getOSensorNames(Array<std::string>& aOSensorNamesArray);
     void scale(const ScaleSet& aScaleSet);
     /** Add a prefix to sensor names for all orientation sensors in the set**/
     void addNamePrefix(const std::string& prefix);
     OrientationSensor* addOrientationSensor(const std::string& aName, const SimTK::Vec3& aPositionOffset, const SimTK::Vec3& aRotationOffset, OpenSim::Body& aBody);
 
-//=============================================================================
 };  // END of class OrientationSensorSet
-//=============================================================================
-//=============================================================================
 
 } // end of namespace OpenSim
 

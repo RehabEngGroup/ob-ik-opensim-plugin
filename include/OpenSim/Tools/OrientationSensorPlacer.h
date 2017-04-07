@@ -42,33 +42,10 @@ namespace OpenSim {
   class IKTrial;
   class Storage;
 
-  //=============================================================================
-  //=============================================================================
-  /**
-   * A class implementing a set of parameters describing how to place markers
-   * on a model (presumably after it has been scaled to fit a subject).
-   *
-   * @author Peter Loan
-   * @version 1.0
-   */
-
-   //=============================================================================
-   //=============================================================================
-   /**
-   * OrientationSensorPlacer.h
-   * The extended version of the original OpenSim MarkerPlacer class to allow orientation
-   * sensor orientations adjustments on body segments during a static trial
-   *
-   * @author: Luca Tagliapietra <tagliapietra@gest.unipd.it>
-   * @notes: 2016, Dec
-   */
 
   class OSIMEXTENDEDIK_API OrientationSensorPlacer : public Object {
     OpenSim_DECLARE_CONCRETE_OBJECT(OrientationSensorPlacer, Object);
 
-    //=============================================================================
-    // DATA
-    //=============================================================================
   private:
 
   protected:
@@ -206,10 +183,8 @@ namespace OpenSim {
     void setNull();
     void setupProperties();
     void moveModelOSensorsToPose(SimTK::State& s, Model& aModel, OrientationSensorData& aPose);
-    //=============================================================================
+
   };	// END of class OrientationSensorPlacer
-  //=============================================================================
-  //=============================================================================
 
 } // end of namespace OpenSim
 
