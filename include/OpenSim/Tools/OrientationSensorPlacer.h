@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __OrientationSensorPlacer_h__
-#define __OrientationSensorPlacer_h__
+#ifndef ORIENTATION_SENSORS_PLACER_H_
+#define ORIENTATION_SENSORS_PLACER_H_
 
 #include <iostream>
 #include <string>
@@ -188,4 +188,4 @@ namespace OpenSim {
 
 } // end of namespace OpenSim
 
-#endif // __OrientationSensorPlacer_h__
+#endif // ORIENTATION_SENSORS_PLACER_H_

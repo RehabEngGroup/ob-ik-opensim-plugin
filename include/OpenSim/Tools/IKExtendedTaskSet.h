@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __IKExtendedTaskSet_h__
-#define __IKExtendedTaskSet_h__
+#ifndef IK_EXTENDED_TASK_SET_H_
+#define IK_EXTENDED_TASK_SET_H_
 
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
 #include <OpenSim/Common/Set.h>
@@ -58,4 +58,4 @@ public:
 
 } // end of namespace OpenSim
 
-#endif // __IKExtendedTaskSet_h__
+#endif // IK_EXTENDED_TASK_SET_H_

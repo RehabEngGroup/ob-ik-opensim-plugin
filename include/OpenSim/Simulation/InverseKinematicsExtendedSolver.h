@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef OPENSIM_INVERSE_KINEMATICS_EXTENDED_SOLVER_H_
-#define OPENSIM_INVERSE_KINEMATICS_EXTENDED_SOLVER_H_
+#ifndef INVERSE_KINEMATICS_EXTENDED_SOLVER_H_
+#define INVERSE_KINEMATICS_EXTENDED_SOLVER_H_
 
 #include "OpenSim/Simulation/AssemblySolver.h"
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
@@ -156,4 +156,4 @@ private:
 
 } // namespace
 
-#endif // OPENSIM_INVERSE_KINEMATICS_EXTENDED_SOLVER_H_
+#endif // INVERSE_KINEMATICS_EXTENDED_SOLVER_H_

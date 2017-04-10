@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __IKOrientationSensorTask_h__
-#define __IKOrientationSensorTask_h__
+#ifndef IK_ORIENTATION_SENSOR_TASK_H_
+#define IK_ORIENTATION_SENSOR_TASK_H_
 
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
 #include "OpenSim/Tools/IKTask.h"
@@ -43,4 +43,4 @@ public:
 
 } // end of namespace OpenSim
 
-#endif // __IKOrientationSensorTask_h__
+#endif // IK_ORIENTATION_SENSOR_TASK_H_

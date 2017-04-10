@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef _OrientationSensor_h
-#define _OrientationSensor_h
+#ifndef ORIENTATION_SENSOR_H_
+#define ORIENTATION_SENSOR_H_
 
 #include <iostream>
 #include <math.h>
@@ -114,6 +114,6 @@ namespace OpenSim {
 } // end of namespace OpenSim
 
 
-#endif // __OrientationSensor_h__
+#endif // ORIENTATION_SENSOR_H_
 
 

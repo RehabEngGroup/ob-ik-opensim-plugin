@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __InverseKinematicsExtendedTool_h__
-#define __InverseKinematicsExtendedTool_h__
+#ifndef IKVERSE_KINEMATICS_EXTENDED_TOOL_H_
+#define IKVERSE_KINEMATICS_EXTENDED_TOOL_H_
 
 #include "OpenSim/Simulation/osimExtendedIKDLL.h"
 #include "OpenSim/Tools/osimToolsDLL.h"
@@ -156,4 +156,4 @@ public:
 
 } // namespace
 
-#endif // __InverseKinematicsExtendedTool_h__
+#endif // IKVERSE_KINEMATICS_EXTENDED_TOOL_H_

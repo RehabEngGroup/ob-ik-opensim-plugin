@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __OrientationSensorSet_h__
-#define __OrientationSensorSet_h__
+#ifndef ORIENTATION_SENSOR_SET_H_
+#define ORIENTATION_SENSOR_SET_H_
 
 #include <OpenSim/Simulation/osimSimulationDLL.h>
 #include <OpenSim/Simulation/Model/ModelComponentSet.h>
@@ -64,4 +64,4 @@ public:
 
 } // end of namespace OpenSim
 
-#endif // __OrientationSensorSet_h__
+#endif // ORIENTATION_SENSOR_SET_H_

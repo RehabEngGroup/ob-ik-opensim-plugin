@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __OrientationSensorsPlacerTool_h__
-#define __OrientationSensorsPlacerTool_h__
+#ifndef ORIENTATION_SENSORS_PLACER_TOOL_H_
+#define ORIENTATION_SENSORS_PLACER_TOOL_H_
 
 #include <iostream>
 #include <math.h>
@@ -110,4 +110,4 @@ class OSIMEXTENDEDIK_API OrientationSensorsPlacerTool : public Object {
 
 } // end of namespace OpenSim
 
-#endif // __OrientationSensorsPlacerTool_h__
+#endif // ORIENTATION_SENSORS_PLACER_TOOL_H_

@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef _RegisterTypes_OsimExtendedIK_h_
-#define _RegisterTypes_OsimExtendedIK_h_
+#ifndef REGISTER_TYPES_OSIM_EXTENDED_IK_H_
+#define REGISTER_TYPES_OSIM_EXTENDED_IK_H_
 
 #include "osimExtendedIKDLL.h"
 
@@ -39,4 +39,4 @@ private:
         void registerDllClasses();
 };
 
-#endif // _RegisterTypes_OsimExtendedIK_h_
+#endif // REGISTER_TYPES_OSIM_EXTENDED_IK_H_

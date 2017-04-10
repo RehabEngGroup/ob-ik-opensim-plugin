@@ -19,8 +19,8 @@
  * limitations under the License.                                             *
  * -------------------------------------------------------------------------- */
 
-#ifndef __OrientationSensorsReference_h__
-#define __OrientationSensorsReference_h__
+#ifndef ORIENTATION_SENSORS_REFERENCE_H_
+#define ORIENTATION_SENSORS_REFERENCE_H_
 
 #include "OpenSim/Simulation/Reference.h"
 #include <OpenSim/Common/Set.h>
@@ -140,4 +140,4 @@ private:
 
 } // namespace
 
-#endif // __OrientationSensorsReference_h__
+#endif // ORIENTATION_SENSORS_REFERENCE_H_H
