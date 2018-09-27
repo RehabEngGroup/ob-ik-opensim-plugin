@@ -36,6 +36,30 @@ Licensing
 --------------
 The Orientation Based Inverse Kinematics Plug-in for OpenSim is distributed under the terms of the Apache 2.0 license (see LICENSE.txt and NOTICE.txt), making it suitable for any use, commercial, government, academic, or personal.
 
+## Citing this work
+
+Please cite the following publication if you are using the code contained in this repository for your own research and/or experiments
+
+
+~~~
+Validation of a model-based inverse kinematics approach based on wearable inertial sensors
+Luca Tagliapietra, Luca Modenese, Elena Ceseracciu, Claudia Mazzá, Monica Reggiani
+Computer Methods in Biomechanics and Biomedical Engineering
+DOI:  10.1080/10255842.2018.1522532
+~~~
+
+The bibtex code for including this citation is provided:
+~~~
+@article{tagliapietra2018Validation,
+  title={Validation of a model-based inverse kinematics approach based on wearable inertial sensors},
+  author={Tagliapietra, Luca and Modenese, Luca and Ceseracciu, Elena and Mazz'a, Claudia and Reggiani, Monica},
+  year={2018},
+  DOI={10.1080/10255842.2018.1522532},
+  publisher={Taylor \& Frencis}, 
+  journal={Computer Methods in Biomechanics and Biomedical Engineering}, 
+}
+~~~
+
 
 Notes
 --------
