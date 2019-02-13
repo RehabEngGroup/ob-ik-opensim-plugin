@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<OpenSimDocument Version="30000">
+	<InverseKinematicsExtendedTool>
+		<!--Directory used for writing results.-->
+		<results_directory></results_directory>
+		<!--Directory for input files-->
+		<input_directory />
+		<!--Name of the .osim file used to construct a model.-->
+		<model_file>../models/ur10_scaled_wOS.osim</model_file>
+		<!--A positive scalar that is used to weight the importance of satisfying constraints.A weighting of 'Infinity' or if it is unassigned results in the constraints being strictly enforced.-->
+		<constraint_weight>Inf</constraint_weight>
+		<!--The accuracy of the solution in absolute terms. I.e. the number of significantdigits to which the solution can be trusted.-->
+		<accuracy>1e-008</accuracy>
+		<!--Markers, Orientation Sensors, and coordinates to be considered (tasks) and their weightings.-->
+		<IKExtendedTaskSet>
+			<objects>
+            <IKOrientationSensorTask name="Imu_13">
+					<!--Whether or not this task will be used during inverse kinematics solve.-->
+					<apply>true</apply>
+					<!--Weight given to a marker or coordinate for solving inverse kinematics problems.-->
+					<weight>1</weight>
+			</IKOrientationSensorTask>
+            <IKOrientationSensorTask name="Imu_14">
+					<!--Whether or not this task will be used during inverse kinematics solve.-->
+					<apply>true</apply>
+					<!--Weight given to a marker or coordinate for solving inverse kinematics problems.-->
+					<weight>10</weight>
+			</IKOrientationSensorTask>
+            <IKOrientationSensorTask name="Imu_15">
+					<!--Whether or not this task will be used during inverse kinematics solve.-->
+					<apply>true</apply>
+					<!--Weight given to a marker or coordinate for solving inverse kinematics problems.-->
+					<weight>10</weight>
+			</IKOrientationSensorTask>
+            <IKOrientationSensorTask name="Imu_16">
+					<!--Whether or not this task will be used during inverse kinematics solve.-->
+					<apply>true</apply>
+					<!--Weight given to a marker or coordinate for solving inverse kinematics problems.-->
+					<weight>10</weight>
+			</IKOrientationSensorTask>
+            </objects>
+			<groups />
+		</IKExtendedTaskSet>
+		<!--TRC file (.trc) containing the time history of observations of marker positions.-->
+		<marker_file>Unassigned</marker_file>
+		<!--MOT/STO file (.mot/.sto) containing the time history of observations of orientation sensor pose.-->
+		<orientation_sensor_file>../inputs/imus/tr_50.mot</orientation_sensor_file>
+		<!--The name of the storage (.sto or .mot) file containing coordinate observations.Coordinate values from this file are included if there is a corresponding coordinate task. -->
+		<coordinate_file>Unassigned</coordinate_file>
+		<!--Time range over which the inverse kinematics problem is solved.-->
+		<time_range>0 40</time_range>
+		<!--Flag (true or false) indicating whether or not to report marker errors from the inverse kinematics solution.-->
+		<report_errors>true</report_errors>
+		<!--Name of the motion file (.mot) to which the results should be written.-->
+		<output_motion_file>../outputs/ob-ik_out_tr_50.mot</output_motion_file>
+		<!--Flag indicating whether or not to report model marker locations in ground.-->
+		<report_marker_locations>false</report_marker_locations>
+	</InverseKinematicsExtendedTool>
+</OpenSimDocument>

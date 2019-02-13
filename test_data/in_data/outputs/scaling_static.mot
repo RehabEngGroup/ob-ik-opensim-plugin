@@ -1,0 +1,8 @@
+static pose
+version=1
+nRows=1
+nColumns=19
+inDegrees=no
+endheader
+time	rotX	rotY	rotZ	shoulder_pan_joint	shoulder_lift_joint	elbow_joint	wrist_1_joint	wrist_2_joint	wrist_3_joint	rotX_u	rotY_u	rotZ_u	shoulder_pan_joint_u	shoulder_lift_joint_u	elbow_joint_u	wrist_1_joint_u	wrist_2_joint_u	wrist_3_joint_u
+  0.00000000	 -0.00119134	  0.00039831	 -1.63982653	  0.00008357	 -0.00002135	 -0.00002375	 -1.54950553	 -1.56958228	 -0.00068456	  0.00000000	  0.00000000	  0.00000000	  0.00000000	  0.00000000	  0.00000000	  0.00000000	  0.00000000	  0.00000000

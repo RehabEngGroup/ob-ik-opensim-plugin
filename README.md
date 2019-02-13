@@ -19,6 +19,13 @@ The developed OB-IK plug-in for OpenSim contains:
 Moreover, two executables are provided to run the tools from command line. The configuration of the execution can be easily managed using .xml setup files, as for the standard OpenSim tools.
 
 
+Test data
+---------
+The folder test_data includes some test data taken from the Framework 1 of the work you are kindly asked to cite if using this 
+plug-in.
+Test data are provided as examples, and we ask you to do not use the provided model without asking for permission and without citing 
+the related paper, since it can be considered as covered by Creative Commons License.
+
 Requirements
 -----------
 + OpenSim v. 3.3
